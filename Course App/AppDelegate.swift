@@ -8,6 +8,9 @@
 
 import UIKit
 
+let apiServer = "http://104.236.56.153:1337"
+let socketServer = apiServer
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
