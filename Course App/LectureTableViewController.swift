@@ -9,25 +9,17 @@
 import UIKit
 
 class LectureTableViewController: UITableViewController {
-    var course: [String: AnyObject] = Dictionary()
-    private let server = APIClient(baseURL: apiServer)
-    private var lectures: [[String: AnyObject]] = []
+    var course: Course!
+    private var lectureList: LectureList!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationItem.title = course["name"] as? String
-        server.get("/lecture?course=\(self.course["id"]!)") {success, data in
-            if success {
-                if let courses = data as? [[String:AnyObject]] {
-                    print("Downloaded \(courses.count) courses")
-                    for element in courses {
-                        self.lectures.append(element)
-                    }
-                }
-                dispatch_async(dispatch_get_main_queue()){
-                    self.tableView.reloadData()
-                }
+        self.navigationItem.title = course.name
+        lectureList = LectureList(url: apiServer, path: (lecturePath + "?course=\(self.course.id)"), courseID: course.id)
+        lectureList.getLectures() {
+            dispatch_async(dispatch_get_main_queue()){
+                self.tableView.reloadData()
             }
         }
     }
@@ -39,12 +31,12 @@ class LectureTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.lectures.count
+        return self.lectureList.lectures.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("lectureCell", forIndexPath: indexPath)
-        cell.textLabel?.text = (lectures[indexPath.row]["description"] as! String)
+        cell.textLabel?.text = (lectureList.lectures[indexPath.row].name)
 
         return cell
     }
@@ -90,7 +82,10 @@ class LectureTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let chatVC = segue.destinationViewController as? ChatViewController {
             let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)
-            chatVC.group = self.lectures[indexPath!.row]
+            chatVC.group = self.lectureList.lectures[indexPath!.row]
+        } else if let videoVC = segue.destinationViewController as? VideoViewController {
+            let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)
+            videoVC.group = self.lectureList.lectures[indexPath!.row]
         }
     }
 

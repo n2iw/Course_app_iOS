@@ -8,8 +8,11 @@
 
 import UIKit
 
+//let apiServer = "http://localhost:1337"
 let apiServer = "http://104.236.56.153:1337"
 let socketServer = apiServer
+let coursePath = "/course"
+let lecturePath = "/lecture"
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

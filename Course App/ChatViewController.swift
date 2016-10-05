@@ -10,11 +10,13 @@ import UIKit
 import SocketIOClientSwift
 
 class ChatViewController: UIViewController, UITextFieldDelegate {
+    let messageAttribute = [ NSForegroundColorAttributeName: UIColor.blueColor() ]
+    let authorAttribute = [NSForegroundColorAttributeName: UIColor.grayColor()]
 
     
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var textField: UITextField!
-    var group: [String: AnyObject] = Dictionary()
+    var group: Lecture!
     
     private var socket = SocketIOClient(socketURL: NSURL(string: socketServer)!, options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])])
 //    private var socket = SocketIOClient(socketURL: NSURL(string: "http://localhost:1337")!, options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])])
@@ -22,19 +24,25 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = self.group["description"] as? String
+        self.navigationItem.title = self.group.name
 
         socket.on("connect") {data, ack in
             print("socket connected")
-            self.socket.emit("post", ["url": "/groups/join/\(self.group["id"]!)"])
+            self.socket.emit("post", ["url": "/groups/join/\(self.group.id)"])
         }
         
         socket.on("message") {data, ack in
             if let message = data[0] as? Dictionary<String, AnyObject> {
                 print("message for group: \(message["group"]!)")
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.textView.text! += message["author"] as! String + "\n"
-                    self.textView.text! += message["content"] as! String + "\n\n"
+                    // create attributed string
+                    let author = message["author"] as! String + ":\n"
+                    let msg = message["content"] as! String + "\n\n"
+                    let myAttrString = NSMutableAttributedString(attributedString: self.textView.attributedText)
+                    myAttrString.appendAttributedString(NSAttributedString(string: author, attributes: self.authorAttribute))
+                    myAttrString.appendAttributedString(NSAttributedString(string: msg, attributes: self.messageAttribute))
+                    
+                    self.textView.attributedText = myAttrString
                 }
             } else {
                 print("Got message: wrong format!")
@@ -74,7 +82,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             socket.emit("post", [
                 "url": "/messages",
                 "data": [
-                    "group": self.group["id"] as! Int,
+                    "group": self.group.id,
                     "author": 3,
                     "content": textField.text!
                 ]

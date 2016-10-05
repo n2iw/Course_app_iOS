@@ -10,34 +10,23 @@ import UIKit
 
 class CourseTableViewController: UITableViewController {
     
-    private let server = APIClient(baseURL: apiServer)
-    private var courses: [[String: AnyObject]] = []
-
+    private var courseList = CourseList(url: apiServer, path: coursePath)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        server.get("/course") {success, data in
-            if success {
-                if let courses = data as? [[String:AnyObject]] {
-                    print("Downloaded \(courses.count) courses")
-                    for element in courses {
-                        self.courses.append(element)
-                    }
-                }
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.tableView.reloadData()
-//                    self.tableView.setNeedsDisplay()
-                }
+        self.courseList.getCourses( {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
             }
-        }
+        })
         
-
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -52,12 +41,12 @@ class CourseTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return self.courses.count
+        return self.courseList.courses.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("CouresCell", forIndexPath: indexPath)
-        cell.textLabel?.text = (courses[indexPath.row]["name"] as! String)
+        cell.textLabel?.text = (courseList.courses[indexPath.row].name)
 
         // Configure the cell...
 
@@ -105,7 +94,7 @@ class CourseTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let lectureVC = segue.destinationViewController as? LectureTableViewController {
             let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)
-            lectureVC.course = self.courses[indexPath!.row]
+            lectureVC.course = courseList.courses[indexPath!.row]
         }
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.

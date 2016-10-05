@@ -12,6 +12,8 @@
 		1A29A10A1D77270600BE733D /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A29A1091D77270600BE733D /* VideoViewController.swift */; };
 		1A29A10C1D7727F000BE733D /* Video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1A29A10B1D7727F000BE733D /* Video.mp4 */; };
 		1A29A10E1D774DAA00BE733D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */; };
+		1A486FC51D78726100A6D584 /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A486FC41D78726100A6D584 /* Course.swift */; };
+		1A486FCA1D792E4700A6D584 /* Lecture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A486FC91D792E4700A6D584 /* Lecture.swift */; };
 		1A770EF91D3C35EE00722164 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A770EF81D3C35EE00722164 /* ChatViewController.swift */; };
 		1A770EFF1D3C733700722164 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A770EFE1D3C733700722164 /* APIClient.swift */; };
 		1A91FD0A1D36052E00D646FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A91FD091D36052E00D646FC /* AppDelegate.swift */; };
@@ -28,6 +30,8 @@
 		1A29A1091D77270600BE733D /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		1A29A10B1D7727F000BE733D /* Video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Video.mp4; sourceTree = "<group>"; };
 		1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		1A486FC41D78726100A6D584 /* Course.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
+		1A486FC91D792E4700A6D584 /* Lecture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lecture.swift; sourceTree = "<group>"; };
 		1A770EF81D3C35EE00722164 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		1A770EFE1D3C733700722164 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		1A91FD061D36052E00D646FC /* Course App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Course App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +56,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A486FC81D7874FF00A6D584 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1A486FC41D78726100A6D584 /* Course.swift */,
+				1A486FC91D792E4700A6D584 /* Lecture.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		1A91FCFD1D36052E00D646FC = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +98,7 @@
 				1A91FD101D36052E00D646FC /* Assets.xcassets */,
 				1A91FD121D36052E00D646FC /* LaunchScreen.storyboard */,
 				1A91FD151D36052E00D646FC /* Info.plist */,
+				1A486FC81D7874FF00A6D584 /* Model */,
 			);
 			path = "Course App";
 			sourceTree = "<group>";
@@ -230,8 +244,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A486FC51D78726100A6D584 /* Course.swift in Sources */,
 				1A29A1061D76AA2C00BE733D /* CourseTableViewController.swift in Sources */,
 				1A770EF91D3C35EE00722164 /* ChatViewController.swift in Sources */,
+				1A486FCA1D792E4700A6D584 /* Lecture.swift in Sources */,
 				1A29A10E1D774DAA00BE733D /* SettingsViewController.swift in Sources */,
 				1A29A10A1D77270600BE733D /* VideoViewController.swift in Sources */,
 				1A91FD0A1D36052E00D646FC /* AppDelegate.swift in Sources */,
@@ -355,6 +371,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Course App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.albany.mying2.Course-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -370,6 +387,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Course App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.albany.mying2.Course-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";

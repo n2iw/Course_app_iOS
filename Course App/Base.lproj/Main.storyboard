@@ -17,16 +17,17 @@
                     </tabBar>
                     <connections>
                         <segue destination="DtS-ci-WBS" kind="relationship" relationship="viewControllers" id="cGx-tf-5Np"/>
+                        <segue destination="Fyv-gP-KVL" kind="relationship" relationship="viewControllers" id="vJn-km-XV8"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wqK-96-7uD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="303" y="379"/>
         </scene>
-        <!--Settings View Controller-->
+        <!--Settings-->
         <scene sceneID="7gu-eQ-qTI">
             <objects>
-                <viewController id="Fyv-gP-KVL" customClass="SettingsViewController" customModule="Course_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Settings" id="Fyv-gP-KVL" customClass="SettingsViewController" customModule="Course_App" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="c7C-mq-qgR"/>
                         <viewControllerLayoutGuide type="bottom" id="qHl-Nd-1A6"/>
@@ -36,10 +37,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Settings" id="Wpx-Ox-a8o"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="amW-OS-CDe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="585" y="1080"/>
+            <point key="canvasLocation" x="169" y="1108"/>
         </scene>
         <!--Chat-->
         <scene sceneID="aWq-qM-P77">
@@ -53,19 +55,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xiY-Ad-TLW">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xiY-Ad-TLW">
                                 <rect key="frame" x="20" y="72" width="560" height="433"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <attributedString key="attributedText"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter message here" borderStyle="roundedRect" placeholder="Enter message here" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="4nD-bL-Kq1">
                                 <rect key="frame" x="20" y="513" width="560" height="30"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="send"/>
-                                <connections>
-                                    <action selector="textFieldValueChanged:" destination="4Au-Ii-EbK" eventType="editingChanged" id="N4s-cj-LdO"/>
-                                </connections>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -106,7 +105,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Course 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="t3X-fP-WVD">
-                                            <rect key="frame" x="15" y="12" width="64" height="20"/>
+                                            <rect key="frame" x="15" y="12" width="66" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -191,7 +190,31 @@
                     <view key="view" contentMode="scaleToFill" id="fL4-65-0t6">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l3X-F8-glT">
+                                <rect key="frame" x="20" y="72" width="560" height="30"/>
+                                <state key="normal" title="Chat"/>
+                                <connections>
+                                    <segue destination="4Au-Ii-EbK" kind="show" identifier="chat" id="I0P-MK-m3e"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A9r-rQ-96q">
+                                <rect key="frame" x="20" y="110" width="560" height="30"/>
+                                <state key="normal" title="Play Video"/>
+                                <connections>
+                                    <action selector="playVideo:" destination="khJ-jE-yXP" eventType="touchUpInside" id="eRB-rM-JhH"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="l3X-F8-glT" firstAttribute="top" secondItem="m8T-cn-25O" secondAttribute="bottom" constant="8" symbolic="YES" id="G9r-0D-NU7"/>
+                            <constraint firstItem="l3X-F8-glT" firstAttribute="leading" secondItem="A9r-rQ-96q" secondAttribute="leading" id="GLY-il-YdR"/>
+                            <constraint firstItem="l3X-F8-glT" firstAttribute="leading" secondItem="fL4-65-0t6" secondAttribute="leadingMargin" id="Rhp-4u-kV2"/>
+                            <constraint firstItem="l3X-F8-glT" firstAttribute="trailing" secondItem="A9r-rQ-96q" secondAttribute="trailing" id="VgO-HL-xyW"/>
+                            <constraint firstItem="l3X-F8-glT" firstAttribute="trailing" secondItem="fL4-65-0t6" secondAttribute="trailingMargin" id="qBQ-d7-idp"/>
+                            <constraint firstItem="A9r-rQ-96q" firstAttribute="top" secondItem="l3X-F8-glT" secondAttribute="bottom" constant="8" symbolic="YES" id="wa5-DS-HwW"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nHS-po-qy3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -218,4 +241,7 @@
             <point key="canvasLocation" x="1145" y="361"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="hZs-H0-irZ"/>
+    </inferredMetricsTieBreakers>
 </document>
