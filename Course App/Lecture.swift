@@ -11,57 +11,41 @@ import Foundation
 class Lecture {
     var name: String!
     var id: Int!
-    init(id: Int, name: String) {
+    var video_url: String!
+    init(id: Int, name: String, video_url: String) {
         self.id = id
         self.name = name
+        self.video_url = video_url
+    }
+    
+    func videoFileURL() -> NSURL {
+        if videoExists() {
+            return NSURL()
+        } else {
+            return NSURL()
+        }
+    }
+    
+    func videoExists() -> Bool {
+        return false
+    }
+    
+    func downloadVideo(callback: ()->Void) {
+        print("Downloading file \(video_url)")
+        let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+        let task = session.downloadTaskWithURL(NSURL(string: video_url)!) {
+            location, response, err in
+            if ((err == nil)) {
+                print(response)
+                print(location)
+            }
+            
+        }
+        task.resume()
+        
+        let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+        
+        callback()
     }
 }
 
-class LectureList {
-    var lectures: [Lecture] = Array()
-    private let server: APIClient
-    private let path: String
-    private let courseID: Int
-    private let defaults = NSUserDefaults.standardUserDefaults()
-    
-    init(url: String, path: String, courseID: Int) {
-        server = APIClient(baseURL: url)
-        self.path = path
-        self.courseID = courseID
-        if let savedLectures = defaults.arrayForKey("\(self.courseID)"){
-            print("Load Saved lectures")
-            for l in savedLectures {
-                let lecture = Lecture(id: l["id"] as! Int, name: l["description"] as! String)
-                lectures.append(lecture)
-            }
-        }
-        fetch() {
-        }
-    }
-    
-    func getLectures(callback: ( () -> Void)) {
-        if lectures.count == 0 {
-            fetch(callback)
-        } else {
-            callback()
-        }
-    }
-    
-    private func fetch(callback: (() -> Void)?) {
-        server.get(path) {success, data in
-            if success {
-                if let lectures = data as? [[String:AnyObject]] {
-                    print("Downloaded \(lectures.count) lectures")
-                    self.lectures = Array()
-                    for element in lectures {
-                        self.lectures.append(Lecture(id: element["id"] as! Int,
-                            name: element["description"] as! String))
-                    }
-                    self.defaults.setObject( lectures, forKey: "\(self.courseID)")
-                    self.defaults.synchronize()
-                    callback?()
-                }
-            }
-        }
-    }
-}
