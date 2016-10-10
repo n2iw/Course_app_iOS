@@ -10,7 +10,6 @@
 		1A29A1061D76AA2C00BE733D /* CourseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A29A1051D76AA2C00BE733D /* CourseTableViewController.swift */; };
 		1A29A1081D76B7FB00BE733D /* LectureTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A29A1071D76B7FB00BE733D /* LectureTableViewController.swift */; };
 		1A29A10A1D77270600BE733D /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A29A1091D77270600BE733D /* VideoViewController.swift */; };
-		1A29A10C1D7727F000BE733D /* Video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1A29A10B1D7727F000BE733D /* Video.mp4 */; };
 		1A29A10E1D774DAA00BE733D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */; };
 		1A47D12F1DAC22B600E6B198 /* LectureList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47D12E1DAC22B600E6B198 /* LectureList.swift */; };
 		1A47D1311DAC22FB00E6B198 /* CourseList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47D1301DAC22FB00E6B198 /* CourseList.swift */; };
@@ -30,7 +29,6 @@
 		1A29A1051D76AA2C00BE733D /* CourseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseTableViewController.swift; sourceTree = "<group>"; };
 		1A29A1071D76B7FB00BE733D /* LectureTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureTableViewController.swift; sourceTree = "<group>"; };
 		1A29A1091D77270600BE733D /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
-		1A29A10B1D7727F000BE733D /* Video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Video.mp4; sourceTree = "<group>"; };
 		1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		1A47D12E1DAC22B600E6B198 /* LectureList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureList.swift; sourceTree = "<group>"; };
 		1A47D1301DAC22FB00E6B198 /* CourseList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseList.swift; sourceTree = "<group>"; };
@@ -85,7 +83,6 @@
 		1A91FCFD1D36052E00D646FC = {
 			isa = PBXGroup;
 			children = (
-				1A29A10B1D7727F000BE733D /* Video.mp4 */,
 				1A91FD081D36052E00D646FC /* Course App */,
 				1A91FD071D36052E00D646FC /* Products */,
 				24D43B6E7AF0662F70D29841 /* Pods */,
@@ -199,7 +196,6 @@
 				1A91FD141D36052E00D646FC /* LaunchScreen.storyboard in Resources */,
 				1A91FD111D36052E00D646FC /* Assets.xcassets in Resources */,
 				1A91FD0F1D36052E00D646FC /* Main.storyboard in Resources */,
-				1A29A10C1D7727F000BE733D /* Video.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
