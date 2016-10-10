@@ -12,6 +12,8 @@
 		1A29A10A1D77270600BE733D /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A29A1091D77270600BE733D /* VideoViewController.swift */; };
 		1A29A10C1D7727F000BE733D /* Video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1A29A10B1D7727F000BE733D /* Video.mp4 */; };
 		1A29A10E1D774DAA00BE733D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */; };
+		1A47D12F1DAC22B600E6B198 /* LectureList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47D12E1DAC22B600E6B198 /* LectureList.swift */; };
+		1A47D1311DAC22FB00E6B198 /* CourseList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47D1301DAC22FB00E6B198 /* CourseList.swift */; };
 		1A486FC51D78726100A6D584 /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A486FC41D78726100A6D584 /* Course.swift */; };
 		1A486FCA1D792E4700A6D584 /* Lecture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A486FC91D792E4700A6D584 /* Lecture.swift */; };
 		1A770EF91D3C35EE00722164 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A770EF81D3C35EE00722164 /* ChatViewController.swift */; };
@@ -30,6 +32,8 @@
 		1A29A1091D77270600BE733D /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		1A29A10B1D7727F000BE733D /* Video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Video.mp4; sourceTree = "<group>"; };
 		1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		1A47D12E1DAC22B600E6B198 /* LectureList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureList.swift; sourceTree = "<group>"; };
+		1A47D1301DAC22FB00E6B198 /* CourseList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseList.swift; sourceTree = "<group>"; };
 		1A486FC41D78726100A6D584 /* Course.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
 		1A486FC91D792E4700A6D584 /* Lecture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lecture.swift; sourceTree = "<group>"; };
 		1A770EF81D3C35EE00722164 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
@@ -56,11 +60,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A47D12D1DAC1AEF00E6B198 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1A91FD0D1D36052E00D646FC /* Main.storyboard */,
+				1A91FD101D36052E00D646FC /* Assets.xcassets */,
+				1A91FD121D36052E00D646FC /* LaunchScreen.storyboard */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		1A486FC81D7874FF00A6D584 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1A770EFE1D3C733700722164 /* APIClient.swift */,
 				1A486FC41D78726100A6D584 /* Course.swift */,
 				1A486FC91D792E4700A6D584 /* Lecture.swift */,
+				1A47D12E1DAC22B600E6B198 /* LectureList.swift */,
+				1A47D1301DAC22FB00E6B198 /* CourseList.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -87,18 +104,15 @@
 		1A91FD081D36052E00D646FC /* Course App */ = {
 			isa = PBXGroup;
 			children = (
+				1A486FC81D7874FF00A6D584 /* Model */,
+				1A47D12D1DAC1AEF00E6B198 /* View */,
 				1A91FD091D36052E00D646FC /* AppDelegate.swift */,
 				1A29A1051D76AA2C00BE733D /* CourseTableViewController.swift */,
 				1A29A1071D76B7FB00BE733D /* LectureTableViewController.swift */,
-				1A91FD0D1D36052E00D646FC /* Main.storyboard */,
 				1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */,
 				1A29A1091D77270600BE733D /* VideoViewController.swift */,
 				1A770EF81D3C35EE00722164 /* ChatViewController.swift */,
-				1A770EFE1D3C733700722164 /* APIClient.swift */,
-				1A91FD101D36052E00D646FC /* Assets.xcassets */,
-				1A91FD121D36052E00D646FC /* LaunchScreen.storyboard */,
 				1A91FD151D36052E00D646FC /* Info.plist */,
-				1A486FC81D7874FF00A6D584 /* Model */,
 			);
 			path = "Course App";
 			sourceTree = "<group>";
@@ -247,7 +261,9 @@
 				1A486FC51D78726100A6D584 /* Course.swift in Sources */,
 				1A29A1061D76AA2C00BE733D /* CourseTableViewController.swift in Sources */,
 				1A770EF91D3C35EE00722164 /* ChatViewController.swift in Sources */,
+				1A47D1311DAC22FB00E6B198 /* CourseList.swift in Sources */,
 				1A486FCA1D792E4700A6D584 /* Lecture.swift in Sources */,
+				1A47D12F1DAC22B600E6B198 /* LectureList.swift in Sources */,
 				1A29A10E1D774DAA00BE733D /* SettingsViewController.swift in Sources */,
 				1A29A10A1D77270600BE733D /* VideoViewController.swift in Sources */,
 				1A91FD0A1D36052E00D646FC /* AppDelegate.swift in Sources */,

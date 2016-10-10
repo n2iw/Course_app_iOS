@@ -16,7 +16,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var textField: UITextField!
-    var group: Lecture!
+    var lecture: Lecture!
     
     private var socket = SocketIOClient(socketURL: NSURL(string: socketServer)!, options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])])
 //    private var socket = SocketIOClient(socketURL: NSURL(string: "http://localhost:1337")!, options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])])
@@ -24,11 +24,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = self.group.name
+        self.navigationItem.title = self.lecture.name
 
         socket.on("connect") {data, ack in
             print("socket connected")
-            self.socket.emit("post", ["url": "/groups/join/\(self.group.id)"])
+            self.socket.emit("post", ["url": "/groups/join/\(self.lecture.id)"])
         }
         
         socket.on("message") {data, ack in
@@ -82,7 +82,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             socket.emit("post", [
                 "url": "/messages",
                 "data": [
-                    "group": self.group.id,
+                    "group": self.lecture.id,
                     "author": 3,
                     "content": textField.text!
                 ]

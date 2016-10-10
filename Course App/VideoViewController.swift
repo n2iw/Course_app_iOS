@@ -12,13 +12,31 @@ import AVFoundation
 
 class VideoViewController: UIViewController {
     
-    var group: Lecture!
+    var lecture: Lecture!
+    @IBOutlet weak var downloadVideoButton: UIButton!
+    @IBOutlet weak var playVideoButton: UIButton!
+    @IBOutlet weak var deleteVideoButton: UIButton!
     
     private var firstAppear = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = group.name
+        self.title = lecture.name
+        setButtonStates()
+    }
+    
+    private func setButtonStates() {
+        playVideoButton.enabled = lecture.videoExists()
+        deleteVideoButton.enabled = lecture.videoExists()
+        downloadVideoButton.enabled = !lecture.videoExists()
+    }
+    
+    @IBAction func downloadVideo(sender: UIButton) {
+        lecture.downloadVideo() {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.setButtonStates()
+            }
+        }
     }
     
     @IBAction func playVideo(sender: UIButton) {
@@ -59,11 +77,8 @@ class VideoViewController: UIViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let chatVC = segue.destinationViewController as? ChatViewController {
-            chatVC.group = self.group
+            chatVC.lecture = self.lecture
         }
-
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
     }
     
 }

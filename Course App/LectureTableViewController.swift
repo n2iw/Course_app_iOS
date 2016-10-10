@@ -82,10 +82,10 @@ class LectureTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let chatVC = segue.destinationViewController as? ChatViewController {
             let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)
-            chatVC.group = self.lectureList.lectures[indexPath!.row]
+            chatVC.lecture = self.lectureList.lectures[indexPath!.row]
         } else if let videoVC = segue.destinationViewController as? VideoViewController {
             let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)
-            videoVC.group = self.lectureList.lectures[indexPath!.row]
+            videoVC.lecture = self.lectureList.lectures[indexPath!.row]
         }
     }
 
