@@ -212,7 +212,7 @@
                                     <action selector="deleteVideo:" destination="khJ-jE-yXP" eventType="touchUpInside" id="ZAT-2h-xeL"/>
                                 </connections>
                             </button>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kSb-9t-F2n">
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kSb-9t-F2n">
                                 <rect key="frame" x="20" y="224" width="560" height="2"/>
                             </progressView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A9r-rQ-96q">

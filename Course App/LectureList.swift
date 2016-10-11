@@ -26,8 +26,7 @@ class LectureList {
             for l in savedLectures {
                 let lecture = Lecture(id: l["id"] as! Int,
                                       name: l["description"] as! String,
-                                      video_url: l["video_url"] as! String,
-                                      baseUrl: baseUrl)
+                                      video_url: l["video_url"] as! String)
                 lectures.append(lecture)
             }
         }
@@ -53,8 +52,7 @@ class LectureList {
                     for element in lectures {
                         self.lectures.append(Lecture(id: element["id"] as! Int,
                             name: element["description"] as! String,
-                            video_url: element["video_url"] as! String,
-                             baseUrl: self.baseUrl))
+                            video_url: element["video_url"] as! String))
                     }
                     self.defaults.setObject( lectures, forKey: "\(self.courseID)")
                     self.defaults.synchronize()

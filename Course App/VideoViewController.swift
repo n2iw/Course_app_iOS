@@ -13,7 +13,11 @@ import AVFoundation
 class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
     
     var lecture: Lecture!
+    var localFileURL: NSURL!
     var downloading: Bool = false
+    var session: NSURLSession?
+    var task: NSURLSessionDownloadTask?
+    var resumeData: NSData?
     
     @IBOutlet weak var downloadVideoButton: UIButton!
     @IBOutlet weak var playVideoButton: UIButton!
@@ -24,54 +28,118 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = lecture.name
-        updateButtonStates()
         progressBar.hidden = true
         downloading = false
+        
+        let fileExtention = (NSURL(string: lecture.video_url)?.pathExtension!)!
+        let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+        localFileURL = folder.URLByAppendingPathComponent("\(lecture.id).\(fileExtention)")
+        
+        session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+                               delegate: self,
+                               delegateQueue: NSOperationQueue.mainQueue())
+        updateButtonStates()
     }
     
     private func updateButtonStates() {
-        playVideoButton.enabled = lecture.videoExists()
-        deleteVideoButton.enabled = lecture.videoExists()
-        downloadVideoButton.enabled = !lecture.videoExists()
+        playVideoButton.enabled = videoExists()
+        deleteVideoButton.enabled = videoExists()
+        downloadVideoButton.enabled = !videoExists()
+    }
+    
+    private func videoExists() -> Bool {
+        return NSFileManager.defaultManager().fileExistsAtPath(localFileURL.path!)
     }
     
     @IBAction func downloadVideo(sender: UIButton) {
-        if !downloading {
-            downloading = true
+        if task == nil {
             downloadVideoButton.setTitle("Cancel Download", forState: .Normal)
             progressBar.hidden = false
-            progressBar.setProgress(0.0, animated: false)
-            let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-                                   delegate: self,
-                                   delegateQueue: NSOperationQueue.mainQueue())
-            lecture.downloadVideo(session) { err in
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.downloading = false
-                    self.downloadVideoButton.setTitle("Download Video", forState: .Normal)
-                    self.updateButtonStates()
-                }
-                if err != nil {
-                    print("Download failed for \(self.lecture.name)")
-                }
-            }
+            downloadVideo()
         } else {
-            downloading = false;
             downloadVideoButton.setTitle("Download Video", forState: .Normal)
-            lecture.cancelDownload()
+            cancelDownload()
         }
     }
     
-    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
-        print("Delegate Finish downloading")
+    private func downloadVideo(){
+        if task != nil {
+            print("Lecture: already downloading, can't download again")
+            return
+        }
+        
+        //resume a download
+        if let data = resumeData {
+            print("resume download")
+            task = session?.downloadTaskWithResumeData(data)
+            task!.resume()
+        } else {
+            //new download
+            print("new download")
+            let url = apiServer + lecture.video_url
+            print("Downloading file \(url) to \(localFileURL.lastPathComponent!)")
+            
+            task = session?.downloadTaskWithURL(NSURL(string: url)!)
+            task!.resume()
+        }
     }
     
+    
+    private func cancelDownload() {
+        if let task = self.task {
+            print("Cancel download")
+            task.cancelByProducingResumeData() {
+                resumeData in
+                self.resumeData = resumeData
+                self.task = nil
+            }
+        }
+    }
+    
+    //download resume
     func URLSession(session: NSURLSession,
                     downloadTask: NSURLSessionDownloadTask,
-                    bytesWritten: Int64,
-                    totalBytesWritten: Int64,
-                    tototalBytesExpectedToWrite: Int64) {
-        self.progressBar.setProgress(Float(totalBytesWritten)/Float(tototalBytesExpectedToWrite), animated: true)
+                    didResumeAtOffset fileOffset: Int64,
+                                      expectedTotalBytes: Int64) {
+        self.progressBar.setProgress(Float(fileOffset)/Float(expectedTotalBytes), animated: true)
     }
+    
+    //progress report
+    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        self.progressBar.setProgress(Float(totalBytesWritten)/Float(totalBytesExpectedToWrite), animated: true)
+    }
+    
+    //download finished
+    func URLSession(session: NSURLSession,
+                      downloadTask: NSURLSessionDownloadTask,
+                                   didFinishDownloadingToURL location: NSURL) {
+        do {
+            try NSFileManager.defaultManager().moveItemAtURL(location, toURL: self.localFileURL)
+        } catch {
+            print("Move file \(location.path!) failed")
+        }
+        
+        self.task = nil
+        self.resumeData = nil
+        self.downloadVideoButton.setTitle("Download Video", forState: .Normal)
+        self.updateButtonStates()
+        self.progressBar.hidden = true
+        self.progressBar.setProgress(0.0, animated: false)
+        print("download succeed")
+    }
+    
+    //download failed
+    func URLSession(session: NSURLSession,
+                      task: NSURLSessionTask,
+                           didCompleteWithError error: NSError?) {
+        if error != nil {
+            print("download failed")
+            resumeData = error?.userInfo[NSURLSessionDownloadTaskResumeData] as? NSData
+        }
+        self.task = nil
+        self.downloadVideoButton.setTitle("Download Video", forState: .Normal)
+    }
+    
     
     @IBAction func playVideo(sender: UIButton) {
             do {
@@ -84,7 +152,7 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
     }
     
     private func playVideo() throws {
-        let player = AVPlayer(URL: lecture.localFileURL)
+        let player = AVPlayer(URL: localFileURL)
         let playerController = AVPlayerViewController()
         playerController.player = player
         self.presentViewController(playerController, animated: true) {
@@ -93,8 +161,11 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
     }
     
     @IBAction func deleteVideo(sender: UIButton) {
-        let result = lecture.deleteVideo()
-        print("delete success? \(result)")
+        do {
+            try NSFileManager.defaultManager().removeItemAtURL(localFileURL)
+        } catch {
+            print("Can't delete file at: \(localFileURL.path!)")
+        }
         updateButtonStates()
     }
     
