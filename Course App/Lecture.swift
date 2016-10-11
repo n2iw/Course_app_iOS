@@ -9,13 +9,23 @@
 import Foundation
 
 class Lecture {
-    var name: String!
-    var id: Int!
-    var video_url: String!
-    init(id: Int, name: String, video_url: String) {
+    let name: String
+    let id: Int
+    let video_url: String
+    let localFileURL: NSURL
+    let baseUrl: String
+    var task: NSURLSessionDownloadTask?
+    var resumeData: NSData? = nil
+    
+    init(id: Int, name: String, video_url: String, baseUrl: String) {
         self.id = id
         self.name = name
         self.video_url = video_url
+        self.baseUrl = baseUrl
+        let fileExtention = (NSURL(string: video_url)?.pathExtension!)!
+        
+        let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+        localFileURL = folder.URLByAppendingPathComponent("\(id).\(fileExtention)")
     }
     
     func videoFileURL() -> NSURL {
@@ -27,25 +37,67 @@ class Lecture {
     }
     
     func videoExists() -> Bool {
-        return false
+        return NSFileManager.defaultManager().fileExistsAtPath(localFileURL.path!)
     }
     
-    func downloadVideo(callback: ()->Void) {
-        print("Downloading file \(video_url)")
-        let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-        let task = session.downloadTaskWithURL(NSURL(string: video_url)!) {
-            location, response, err in
+    func downloadVideo(session: NSURLSession ,callback: (NSError?)->Void){
+       
+        let handler: (NSURL?, NSURLResponse?, NSError?) -> () = {location, response, err in
             if ((err == nil)) {
-                print(response)
-                print(location)
+                self.resumeData = nil
+                do {
+                    try NSFileManager.defaultManager().moveItemAtURL(location!, toURL: self.localFileURL)
+                } catch {
+                    print("Move file \(location!.path!) failed")
+                }
             }
-            
+            self.task = nil
+            callback(err)
         }
-        task.resume()
         
-        let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
         
-        callback()
+        if task != nil {
+            print("Lecture: already downloading, can't download again")
+            return
+        }
+        
+        
+        //resume a download
+        if let data = resumeData {
+            print("Lecture: resume download")
+            task = session.downloadTaskWithResumeData(data, completionHandler: handler)
+            task!.resume()
+        } else {
+            //new download
+            print("Lecture: new download")
+            let url = baseUrl + video_url
+            print("Downloading file \(url) to \(localFileURL.lastPathComponent!)")
+            
+            task = session.downloadTaskWithURL(NSURL(string: url)!, completionHandler: handler)
+            task!.resume()
+        }
+    }
+    
+    
+    func cancelDownload() {
+        if let task = self.task {
+            print("Lecture: Cancel download")
+            task.cancelByProducingResumeData() {
+                resumeData in
+                self.resumeData = resumeData
+                self.task = nil
+            }
+        }
+    }
+    
+    func deleteVideo() -> Bool {
+        do {
+            try NSFileManager.defaultManager().removeItemAtURL(localFileURL)
+            return true
+        } catch {
+            print("Can't delete file at: \(localFileURL.path!)")
+            return false
+        }
     }
 }
 

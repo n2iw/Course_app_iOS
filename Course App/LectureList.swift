@@ -10,12 +10,14 @@ import Foundation
 
 class LectureList {
     var lectures: [Lecture] = Array()
+    private let baseUrl: String
     private let server: APIClient
     private let path: String
     private let courseID: Int
     private let defaults = NSUserDefaults.standardUserDefaults()
     
     init(url: String, path: String, courseID: Int) {
+        self.baseUrl = url
         server = APIClient(baseURL: url)
         self.path = path
         self.courseID = courseID
@@ -24,7 +26,8 @@ class LectureList {
             for l in savedLectures {
                 let lecture = Lecture(id: l["id"] as! Int,
                                       name: l["description"] as! String,
-                                      video_url: l["video_url"] as! String)
+                                      video_url: l["video_url"] as! String,
+                                      baseUrl: baseUrl)
                 lectures.append(lecture)
             }
         }
@@ -50,7 +53,8 @@ class LectureList {
                     for element in lectures {
                         self.lectures.append(Lecture(id: element["id"] as! Int,
                             name: element["description"] as! String,
-                            video_url: element["video_url"] as! String))
+                            video_url: element["video_url"] as! String,
+                             baseUrl: self.baseUrl))
                     }
                     self.defaults.setObject( lectures, forKey: "\(self.courseID)")
                     self.defaults.synchronize()

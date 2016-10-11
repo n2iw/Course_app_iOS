@@ -199,18 +199,24 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKi-Vt-lds">
-                                <rect key="frame" x="244" y="110" width="112" height="30"/>
+                                <rect key="frame" x="244" y="186" width="112" height="30"/>
                                 <state key="normal" title="Download Video"/>
                                 <connections>
                                     <action selector="downloadVideo:" destination="khJ-jE-yXP" eventType="touchUpInside" id="FpM-Oe-rgK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="beq-fI-ZCG">
-                                <rect key="frame" x="256" y="186" width="88" height="30"/>
+                                <rect key="frame" x="256" y="148" width="88" height="30"/>
                                 <state key="normal" title="Delete Video"/>
+                                <connections>
+                                    <action selector="deleteVideo:" destination="khJ-jE-yXP" eventType="touchUpInside" id="ZAT-2h-xeL"/>
+                                </connections>
                             </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kSb-9t-F2n">
+                                <rect key="frame" x="20" y="224" width="560" height="2"/>
+                            </progressView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A9r-rQ-96q">
-                                <rect key="frame" x="20" y="148" width="560" height="30"/>
+                                <rect key="frame" x="20" y="110" width="560" height="30"/>
                                 <state key="normal" title="Play Video"/>
                                 <connections>
                                     <action selector="playVideo:" destination="khJ-jE-yXP" eventType="touchUpInside" id="eRB-rM-JhH"/>
@@ -219,22 +225,26 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="kSb-9t-F2n" firstAttribute="leading" secondItem="A9r-rQ-96q" secondAttribute="leading" id="Etd-MY-mKe"/>
                             <constraint firstItem="l3X-F8-glT" firstAttribute="top" secondItem="m8T-cn-25O" secondAttribute="bottom" constant="8" symbolic="YES" id="G9r-0D-NU7"/>
                             <constraint firstItem="l3X-F8-glT" firstAttribute="leading" secondItem="A9r-rQ-96q" secondAttribute="leading" id="GLY-il-YdR"/>
                             <constraint firstItem="beq-fI-ZCG" firstAttribute="top" secondItem="A9r-rQ-96q" secondAttribute="bottom" constant="8" symbolic="YES" id="O9y-V6-ct2"/>
                             <constraint firstItem="l3X-F8-glT" firstAttribute="leading" secondItem="fL4-65-0t6" secondAttribute="leadingMargin" id="Rhp-4u-kV2"/>
                             <constraint firstItem="beq-fI-ZCG" firstAttribute="centerX" secondItem="A9r-rQ-96q" secondAttribute="centerX" id="TGL-sI-DSf"/>
-                            <constraint firstItem="WKi-Vt-lds" firstAttribute="top" secondItem="l3X-F8-glT" secondAttribute="bottom" constant="8" symbolic="YES" id="Vcy-ae-geB"/>
+                            <constraint firstItem="WKi-Vt-lds" firstAttribute="top" secondItem="l3X-F8-glT" secondAttribute="bottom" constant="84" id="Vcy-ae-geB"/>
                             <constraint firstItem="l3X-F8-glT" firstAttribute="trailing" secondItem="A9r-rQ-96q" secondAttribute="trailing" id="VgO-HL-xyW"/>
+                            <constraint firstItem="kSb-9t-F2n" firstAttribute="trailing" secondItem="A9r-rQ-96q" secondAttribute="trailing" id="aHO-tc-3Z8"/>
                             <constraint firstItem="WKi-Vt-lds" firstAttribute="centerX" secondItem="l3X-F8-glT" secondAttribute="centerX" id="dwJ-W5-rYU"/>
+                            <constraint firstItem="kSb-9t-F2n" firstAttribute="top" secondItem="WKi-Vt-lds" secondAttribute="bottom" constant="8" symbolic="YES" id="nEq-i3-soJ"/>
                             <constraint firstItem="l3X-F8-glT" firstAttribute="trailing" secondItem="fL4-65-0t6" secondAttribute="trailingMargin" id="qBQ-d7-idp"/>
-                            <constraint firstItem="A9r-rQ-96q" firstAttribute="top" secondItem="l3X-F8-glT" secondAttribute="bottom" constant="46" id="wa5-DS-HwW"/>
+                            <constraint firstItem="A9r-rQ-96q" firstAttribute="top" secondItem="l3X-F8-glT" secondAttribute="bottom" constant="8" id="wa5-DS-HwW"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="deleteVideoButton" destination="beq-fI-ZCG" id="ASn-PP-Bwn"/>
                         <outlet property="downloadVideoButton" destination="WKi-Vt-lds" id="Sym-p9-PtY"/>
                         <outlet property="playVideoButton" destination="A9r-rQ-96q" id="3by-yS-TAC"/>
+                        <outlet property="progressBar" destination="kSb-9t-F2n" id="SLG-0k-rnh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nHS-po-qy3" userLabel="First Responder" sceneMemberID="firstResponder"/>
