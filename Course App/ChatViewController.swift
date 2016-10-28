@@ -12,6 +12,7 @@ import SocketIOClientSwift
 class ChatViewController: UIViewController, UITextFieldDelegate {
     let messageAttribute = [ NSForegroundColorAttributeName: UIColor.blueColor() ]
     let authorAttribute = [NSForegroundColorAttributeName: UIColor.grayColor()]
+    let TAB_BAR_HEIGHT = 49
 
     
     @IBOutlet weak var textView: UITextView!
@@ -52,6 +53,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         textField.delegate = self
         
         socket.connect()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -63,23 +68,38 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
     
-    func animateTextField(up: Bool)
-    {
-        let movementDistance:CGFloat = -250
-        let movementDuration: Double = 0.3
+//    func animateTextField(up: Bool)
+//    {
+//        let movementDistance:CGFloat = -250
+//        let movementDuration: Double = 0.3
+//        
+//        var movement:CGFloat = 0
+//        if up {
+//            movement = movementDistance
+//        } else {
+//            movement = -movementDistance
+//        }
+//        UIView.beginAnimations("animateTextField", context: nil)
+//        UIView.setAnimationBeginsFromCurrentState(true)
+//        UIView.setAnimationDuration(movementDuration)
+//        self.view.frame = CGRectOffset(self.view.frame, 0, movement)
+//        UIView.commitAnimations()
+//    }
+    
+    func keyboardWillShow(notification: NSNotification) {
         
-        var movement:CGFloat = 0
-        if up {
-            movement = movementDistance
-        } else {
-            movement = -movementDistance
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            self.view.frame.origin.y -= keyboardSize.height - CGFloat(TAB_BAR_HEIGHT)
         }
-        UIView.beginAnimations("animateTextField", context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        UIView.setAnimationDuration(movementDuration)
-        self.view.frame = CGRectOffset(self.view.frame, 0, movement)
-        UIView.commitAnimations()
+        
     }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            self.view.frame.origin.y += keyboardSize.height - CGFloat(TAB_BAR_HEIGHT)
+        }
+    }
+    
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         if textField.text! != "" {
@@ -97,14 +117,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    func textFieldDidBeginEditing(textField: UITextField)
-    {
-        self.animateTextField(true)
-    }
-    
     func textFieldDidEndEditing(textField: UITextField)
     {
-        self.animateTextField(false)
         textField.text = ""
     }
     
