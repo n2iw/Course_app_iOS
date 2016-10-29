@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="SVX-dJ-Fci">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="SVX-dJ-Fci">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -43,7 +43,7 @@
             </objects>
             <point key="canvasLocation" x="169" y="1108"/>
         </scene>
-        <!--Chat-->
+        <!--Chat View Controller-->
         <scene sceneID="aWq-qM-P77">
             <objects>
                 <viewController id="4Au-Ii-EbK" customClass="ChatViewController" customModule="Course_App" customModuleProvider="target" sceneMemberID="viewController">
@@ -55,32 +55,91 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L2H-RH-LQF">
+                                <rect key="frame" x="0.0" y="507" width="600" height="49"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter message here" borderStyle="roundedRect" placeholder="Enter message here" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="XJe-A0-Q4Z">
+                                        <rect key="frame" x="8" y="10" width="516" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="AvT-YG-HBZ"/>
+                                            <constraint firstAttribute="width" constant="528" id="ILV-fu-5Uq"/>
+                                            <constraint firstAttribute="width" constant="516" id="Uh5-m2-R5g"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="send"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="ILV-fu-5Uq"/>
+                                                <exclude reference="Uh5-m2-R5g"/>
+                                            </mask>
+                                        </variation>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Me8-le-9eU">
+                                        <rect key="frame" x="532" y="10" width="48" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="48" id="yYZ-jn-2yz"/>
+                                        </constraints>
+                                        <state key="normal" title="Send"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="XJe-A0-Q4Z" firstAttribute="leading" secondItem="L2H-RH-LQF" secondAttribute="leadingMargin" id="BEa-cH-4ZT"/>
+                                    <constraint firstItem="Me8-le-9eU" firstAttribute="centerY" secondItem="L2H-RH-LQF" secondAttribute="centerY" id="FXa-1C-y6L"/>
+                                    <constraint firstItem="Me8-le-9eU" firstAttribute="centerY" secondItem="L2H-RH-LQF" secondAttribute="centerY" id="FxN-le-PmZ"/>
+                                    <constraint firstItem="Me8-le-9eU" firstAttribute="leading" secondItem="XJe-A0-Q4Z" secondAttribute="trailing" constant="8" symbolic="YES" id="Txb-wo-Utl"/>
+                                    <constraint firstItem="XJe-A0-Q4Z" firstAttribute="baseline" secondItem="Me8-le-9eU" secondAttribute="baseline" id="XKs-5f-hTP"/>
+                                    <constraint firstAttribute="height" constant="49" id="cBY-1o-6wX"/>
+                                    <constraint firstAttribute="trailing" secondItem="Me8-le-9eU" secondAttribute="trailing" constant="20" id="gJF-Js-jrD"/>
+                                    <constraint firstAttribute="trailing" secondItem="Me8-le-9eU" secondAttribute="trailing" constant="20" symbolic="YES" id="vlM-WV-RUJ"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="FxN-le-PmZ"/>
+                                        <exclude reference="gJF-Js-jrD"/>
+                                    </mask>
+                                </variation>
+                            </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xiY-Ad-TLW">
-                                <rect key="frame" x="20" y="72" width="560" height="433"/>
+                                <rect key="frame" x="20" y="72" width="560" height="427"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <attributedString key="attributedText"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter message here" borderStyle="roundedRect" placeholder="Enter message here" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="4nD-bL-Kq1">
-                                <rect key="frame" x="20" y="513" width="560" height="30"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="send"/>
-                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="xiY-Ad-TLW" firstAttribute="top" secondItem="3K6-mN-s5M" secondAttribute="bottom" constant="8" id="5cQ-l5-dNF"/>
-                            <constraint firstItem="xiY-Ad-TLW" firstAttribute="leading" secondItem="5kF-ZP-zCr" secondAttribute="leadingMargin" id="APx-l7-lsU"/>
-                            <constraint firstItem="4nD-bL-Kq1" firstAttribute="top" secondItem="xiY-Ad-TLW" secondAttribute="bottom" constant="8" symbolic="YES" id="Bew-yS-KPZ"/>
-                            <constraint firstItem="xiY-Ad-TLW" firstAttribute="leading" secondItem="4nD-bL-Kq1" secondAttribute="leading" id="FxI-VY-RjA"/>
-                            <constraint firstItem="LWy-Bn-UhH" firstAttribute="top" secondItem="4nD-bL-Kq1" secondAttribute="bottom" constant="8" symbolic="YES" id="IRd-sz-WgS"/>
-                            <constraint firstItem="xiY-Ad-TLW" firstAttribute="trailing" secondItem="4nD-bL-Kq1" secondAttribute="trailing" id="Y0j-ZY-p3J"/>
-                            <constraint firstItem="xiY-Ad-TLW" firstAttribute="trailing" secondItem="5kF-ZP-zCr" secondAttribute="trailingMargin" id="q3Q-L7-wWt"/>
+                            <constraint firstItem="xiY-Ad-TLW" firstAttribute="top" secondItem="3K6-mN-s5M" secondAttribute="bottom" constant="8" symbolic="YES" id="115-RA-OIO"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="L2H-RH-LQF" secondAttribute="trailing" constant="-20" id="2D1-nK-nn5"/>
+                            <constraint firstItem="L2H-RH-LQF" firstAttribute="centerX" secondItem="xiY-Ad-TLW" secondAttribute="centerX" id="5J9-WN-LTc"/>
+                            <constraint firstItem="xiY-Ad-TLW" firstAttribute="leading" secondItem="5kF-ZP-zCr" secondAttribute="leading" constant="20" symbolic="YES" id="DTM-2v-IM3"/>
+                            <constraint firstItem="L2H-RH-LQF" firstAttribute="top" secondItem="5kF-ZP-zCr" secondAttribute="top" constant="507" id="E9B-gg-jB5"/>
+                            <constraint firstItem="L2H-RH-LQF" firstAttribute="top" secondItem="5kF-ZP-zCr" secondAttribute="top" constant="507" id="SHe-Uz-uTh"/>
+                            <constraint firstItem="L2H-RH-LQF" firstAttribute="leading" secondItem="5kF-ZP-zCr" secondAttribute="leading" id="XHb-U7-9O0"/>
+                            <constraint firstItem="L2H-RH-LQF" firstAttribute="centerX" secondItem="xiY-Ad-TLW" secondAttribute="centerX" id="Z2C-6S-sCq"/>
+                            <constraint firstAttribute="trailing" secondItem="xiY-Ad-TLW" secondAttribute="trailing" constant="20" symbolic="YES" id="ane-Vu-UZO"/>
+                            <constraint firstItem="L2H-RH-LQF" firstAttribute="top" secondItem="xiY-Ad-TLW" secondAttribute="bottom" constant="8" symbolic="YES" id="b9T-WY-m1i"/>
+                            <constraint firstItem="xiY-Ad-TLW" firstAttribute="top" secondItem="3K6-mN-s5M" secondAttribute="bottom" constant="8" symbolic="YES" id="c5z-OT-Isw"/>
+                            <constraint firstItem="L2H-RH-LQF" firstAttribute="bottom" secondItem="LWy-Bn-UhH" secondAttribute="top" id="f7Y-KA-idi"/>
+                            <constraint firstItem="L2H-RH-LQF" firstAttribute="centerX" secondItem="xiY-Ad-TLW" secondAttribute="centerX" id="hhj-lO-Rql"/>
+                            <constraint firstItem="L2H-RH-LQF" firstAttribute="top" secondItem="xiY-Ad-TLW" secondAttribute="top" id="xzL-Lp-y4b"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="115-RA-OIO"/>
+                                <exclude reference="5J9-WN-LTc"/>
+                                <exclude reference="E9B-gg-jB5"/>
+                                <exclude reference="SHe-Uz-uTh"/>
+                                <exclude reference="Z2C-6S-sCq"/>
+                                <exclude reference="hhj-lO-Rql"/>
+                                <exclude reference="xzL-Lp-y4b"/>
+                            </mask>
+                        </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Chat" id="67s-1f-C7G"/>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="textField" destination="4nD-bL-Kq1" id="Sj4-Xy-jkS"/>
+                        <outlet property="textField" destination="XJe-A0-Q4Z" id="KNr-JD-or8"/>
                         <outlet property="textView" destination="xiY-Ad-TLW" id="whC-e6-ov2"/>
                     </connections>
                 </viewController>
