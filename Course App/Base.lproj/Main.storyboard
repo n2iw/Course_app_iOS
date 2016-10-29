@@ -58,7 +58,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L2H-RH-LQF">
                                 <rect key="frame" x="0.0" y="507" width="600" height="49"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter message here" borderStyle="roundedRect" placeholder="Enter message here" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="XJe-A0-Q4Z">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter message here" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="XJe-A0-Q4Z">
                                         <rect key="frame" x="8" y="10" width="516" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="AvT-YG-HBZ"/>
@@ -66,7 +66,7 @@
                                             <constraint firstAttribute="width" constant="516" id="Uh5-m2-R5g"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="send"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="ILV-fu-5Uq"/>
@@ -80,6 +80,9 @@
                                             <constraint firstAttribute="width" constant="48" id="yYZ-jn-2yz"/>
                                         </constraints>
                                         <state key="normal" title="Send"/>
+                                        <connections>
+                                            <action selector="send:" destination="4Au-Ii-EbK" eventType="touchUpInside" id="9AM-LZ-uNx"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>

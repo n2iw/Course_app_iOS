@@ -68,23 +68,20 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
     
-//    func animateTextField(up: Bool)
-//    {
-//        let movementDistance:CGFloat = -250
-//        let movementDuration: Double = 0.3
-//        
-//        var movement:CGFloat = 0
-//        if up {
-//            movement = movementDistance
-//        } else {
-//            movement = -movementDistance
-//        }
-//        UIView.beginAnimations("animateTextField", context: nil)
-//        UIView.setAnimationBeginsFromCurrentState(true)
-//        UIView.setAnimationDuration(movementDuration)
-//        self.view.frame = CGRectOffset(self.view.frame, 0, movement)
-//        UIView.commitAnimations()
-//    }
+    @IBAction func send(sender: UIButton) {
+        if textField.text! != "" {
+            socket.emit("post", [
+                "url": "/messages",
+                "data": [
+                    "group": self.lecture.id,
+                    "author": 3,
+                    "content": textField.text!
+                ]
+                ])
+            textField.text = ""
+            textField.resignFirstResponder()
+        }
+    }
     
     func keyboardWillShow(notification: NSNotification) {
         
@@ -102,35 +99,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if textField.text! != "" {
-            socket.emit("post", [
-                "url": "/messages",
-                "data": [
-                    "group": self.lecture.id,
-                    "author": 3,
-                    "content": textField.text!
-                ]
-            ])
-        }
-        
         textField.resignFirstResponder()
         return true
     }
-    
-    func textFieldDidEndEditing(textField: UITextField)
-    {
-        textField.text = ""
-    }
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
