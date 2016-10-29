@@ -68,13 +68,21 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
         saveButton.enabled = false
-        if let first_name = firstNameField.text{
+        if let f_name = firstNameField.text{
+            let first_name = f_name.stringByTrimmingCharactersInSet(
+                NSCharacterSet.whitespaceAndNewlineCharacterSet()
+            ).capitalizedString
+            firstNameField.text = first_name
             if first_name != self.firstName {
                 saveButton.enabled = true
             }
         }
         
-        if let last_name = lastNameField.text {
+        if let l_name = lastNameField.text {
+            let last_name = l_name.stringByTrimmingCharactersInSet(
+                NSCharacterSet.whitespaceAndNewlineCharacterSet()
+            ).capitalizedString
+            lastNameField.text = last_name
             if last_name != self.lastName {
                 saveButton.enabled = true
             }
