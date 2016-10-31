@@ -10,7 +10,7 @@ import UIKit
 
 class CourseTableViewController: UITableViewController {
     
-    private var courseList = CourseList(url: apiServer, path: coursePath)
+    private var courseList = CourseList(url: Settings.apiServer, path: Settings.coursePath)
     
     override func viewDidLoad() {
         super.viewDidLoad()

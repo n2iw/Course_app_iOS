@@ -22,6 +22,7 @@
 		1A91FD0F1D36052E00D646FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A91FD0D1D36052E00D646FC /* Main.storyboard */; };
 		1A91FD111D36052E00D646FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A91FD101D36052E00D646FC /* Assets.xcassets */; };
 		1A91FD141D36052E00D646FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A91FD121D36052E00D646FC /* LaunchScreen.storyboard */; };
+		1AF6FD3A1DC7C3CD00DB693D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6FD391DC7C3CD00DB693D /* Settings.swift */; };
 		5672DD5850541351D10F11CE /* Pods_Course_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056731D1548F89682BBF99F6 /* Pods_Course_App.framework */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +45,7 @@
 		1A91FD101D36052E00D646FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A91FD131D36052E00D646FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1A91FD151D36052E00D646FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1AF6FD391DC7C3CD00DB693D /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		666D26FD5F4BAFFA4DABE257 /* Pods-Course App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Course App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Course App/Pods-Course App.debug.xcconfig"; sourceTree = "<group>"; };
 		C4984B72E9AB73DB593E231C /* Pods-Course App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Course App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Course App/Pods-Course App.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -79,6 +81,7 @@
 				1A47D12E1DAC22B600E6B198 /* LectureList.swift */,
 				1A47D1301DAC22FB00E6B198 /* CourseList.swift */,
 				1A62C6901DC70C8C00F0EC1B /* Message.swift */,
+				1AF6FD391DC7C3CD00DB693D /* Settings.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 			files = (
 				1A486FC51D78726100A6D584 /* Course.swift in Sources */,
 				1A29A1061D76AA2C00BE733D /* CourseTableViewController.swift in Sources */,
+				1AF6FD3A1DC7C3CD00DB693D /* Settings.swift in Sources */,
 				1A770EF91D3C35EE00722164 /* ChatViewController.swift in Sources */,
 				1A47D1311DAC22FB00E6B198 /* CourseList.swift in Sources */,
 				1A486FCA1D792E4700A6D584 /* Lecture.swift in Sources */,

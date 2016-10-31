@@ -16,7 +16,7 @@ class LectureTableViewController: UITableViewController {
         super.viewDidLoad()
 
         self.navigationItem.title = course.name
-        lectureList = LectureList(url: apiServer, path: (lecturePath + "?course=\(self.course.id)"), courseID: course.id)
+        lectureList = LectureList(url: Settings.apiServer, path: (Settings.lecturePath + "?course=\(self.course.id)"), courseID: course.id)
         lectureList.getLectures() {
             dispatch_async(dispatch_get_main_queue()){
                 self.tableView.reloadData()

@@ -76,7 +76,7 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
         } else {
             //new download
             print("new download")
-            let url = apiServer + lecture.video_url
+            let url = Settings.apiServer + lecture.video_url
             print("Downloading file \(url) to \(localFileURL.lastPathComponent!)")
             
             task = session?.downloadTaskWithURL(NSURL(string: url)!)
