@@ -9,14 +9,15 @@
 import UIKit
 import SocketIOClientSwift
 
-class ChatViewController: UIViewController, UITextFieldDelegate {
+class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     let messageAttribute = [ NSForegroundColorAttributeName: UIColor.blueColor() ]
     let authorAttribute = [NSForegroundColorAttributeName: UIColor.grayColor()]
     let TAB_BAR_HEIGHT = 49
 
+    @IBOutlet weak var messageTableView: UITableView!
     
-    @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var textField: UITextField!
+    private var messages: [Message] = []
     var lecture: Lecture!
     
     private var socket = SocketIOClient(socketURL: NSURL(string: socketServer)!, options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])])
@@ -32,18 +33,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             self.socket.emit("post", ["url": "/groups/join/\(self.lecture.id)"])
         }
         
-        socket.on("message") {data, ack in
+        socket.on("message") {[weak weakSelf = self] data, ack in
             if let message = data[0] as? Dictionary<String, AnyObject> {
                 print("message for group: \(message["group"]!)")
                 dispatch_async(dispatch_get_main_queue()) {
                     // create attributed string
                     let author = message["author"] as! String + ":\n"
                     let msg = message["content"] as! String + "\n\n"
-                    let myAttrString = NSMutableAttributedString(attributedString: self.textView.attributedText)
-                    myAttrString.appendAttributedString(NSAttributedString(string: author, attributes: self.authorAttribute))
-                    myAttrString.appendAttributedString(NSAttributedString(string: msg, attributes: self.messageAttribute))
-                    
-                    self.textView.attributedText = myAttrString
+                    weakSelf?.messages.append(Message(author: author, content: msg))
+                    let index = weakSelf!.messages.count - 1
+                    let indexPath = NSIndexPath(forRow: index ,  inSection: 0)
+                    weakSelf?.messageTableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
+                    weakSelf?.messageTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
                 }
             } else {
                 print("Got message: wrong format!")
@@ -59,11 +60,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         view.endEditing(true)
     }
@@ -101,5 +97,26 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    //UITableViewDelegate
+    
+    //UITableViewDataSource
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return self.messages.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("Message", forIndexPath: indexPath)
+        cell.textLabel?.text = messages[indexPath.row].author
+        cell.detailTextLabel?.text = messages[indexPath.row].content
+        
+        return cell
     }
 }
