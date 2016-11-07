@@ -10,7 +10,7 @@ import Foundation
 
 public class Settings {
     //let apiServer = "http://localhost:1337"
-    static let apiServer = "http://104.236.56.153:1337"
+    static let apiServer = "http://192.168.10.10:1337"
     static let socketServer = apiServer
     static let coursePath = "/course"
     static let lecturePath = "/lecture"
