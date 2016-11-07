@@ -9,8 +9,11 @@
 import Foundation
 
 public class Settings {
-    //let apiServer = "http://localhost:1337"
-    static let apiServer = "http://104.236.56.153:1337"
+//    static let apiServer = "http://104.236.56.153:1337" //Ocean2
+//    static let apiServer = "http://192.168.10.10:1337" //local vagrant
+//    static let apiServer = "https://shaban.rit.albany.edu" //local vagrant
+    static let apiServer = "https://shaban.rit.albany.edu/test" //local vagrant
+    
     static let socketServer = apiServer
     static let coursePath = "/course"
     static let lecturePath = "/lecture"
