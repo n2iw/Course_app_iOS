@@ -10,9 +10,9 @@ import Foundation
 
 public class Settings {
 //    static let apiServer = "http://104.236.56.153:1337" //Ocean2
-//    static let apiServer = "http://192.168.10.10:1337" //local vagrant
+    static let apiServer = "http://192.168.10.10:1337" //local vagrant
 //    static let apiServer = "https://shaban.rit.albany.edu" //local vagrant
-    static let apiServer = "https://shaban.rit.albany.edu/test" //local vagrant
+//    static let apiServer = "https://shaban.rit.albany.edu/test" //local vagrant
     
     static let socketServer = apiServer
     static let coursePath = "/course"
@@ -20,39 +20,24 @@ public class Settings {
     
     static let FIRST_NAME = "firstName"
     static let LAST_NAME = "lastName"
+    static let PHONE = "phone"
     
     static private let defaults = NSUserDefaults.standardUserDefaults()
     
-    private static var firstName: String?
-    private static var lastName: String?
+    private static var phone: String?
     
-    static func getFirstName() -> String? {
-        if firstName == nil {
-            firstName = defaults.stringForKey(FIRST_NAME)
+    static func getPhone() -> String? {
+        if phone == nil {
+            phone = defaults.stringForKey(PHONE)
         }
-        return firstName
+        return phone
     }
     
-    static func setFirstName(name: String?) {
-        if name != nil {
-            firstName = name
-            defaults.setObject( firstName, forKey: FIRST_NAME)
+    static func setPhone(phone: String?) {
+        if phone != nil {
+            self.phone = phone
+            defaults.setObject( phone, forKey: PHONE)
             defaults.synchronize()
-        }
-    }
-    
-    static func getLastName() -> String? {
-        if lastName == nil {
-            lastName = defaults.stringForKey(LAST_NAME)
-            defaults.synchronize()
-        }
-        return lastName
-    }
-    
-    static func setLastName(name: String?) {
-        if name != nil {
-            lastName = name
-            defaults.setObject( firstName, forKey: LAST_NAME)
         }
     }
 }
