@@ -7,11 +7,13 @@
 //
 
 import Foundation
-import CoreData
 
-
-class Message: NSManagedObject {
-
-// Insert code here to add functionality to your managed object subclass
-
+class Message {
+    var author: String?
+    var content: String?
+    
+    init(author: String, content: String) {
+        self.author = author
+        self.content = content
+    }
 }

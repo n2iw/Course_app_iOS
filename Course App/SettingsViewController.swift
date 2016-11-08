@@ -10,34 +10,24 @@ import UIKit
 
 class SettingsViewController: UIViewController, UITextFieldDelegate {
     
-    @IBOutlet weak var firstNameField: UITextField!
-    @IBOutlet weak var lastNameField: UITextField!
+    @IBOutlet weak var phoneField: UITextField!
     @IBOutlet weak var saveButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        firstNameField.text = Settings.getFirstName()
-        lastNameField.text = Settings.getLastName()
+        phoneField.text = Settings.getPhone()
 
         saveButton.enabled = false
     }
 
-    @IBAction func saveNames(sender: UIButton) {
-        if let first_name = firstNameField.text{
-            if first_name != Settings.getFirstName() {
-                Settings.setFirstName(first_name.capitalizedString)
-                firstNameField.text = first_name.capitalizedString
-            }
-        }
-        if let last_name = lastNameField.text {
-            if last_name != Settings.getLastName() {
-                Settings.setLastName(last_name.capitalizedString)
-                lastNameField.text = last_name.capitalizedString
+    @IBAction func savePhone(sender: UIButton) {
+        if let phone = phoneField.text{
+            if phone != Settings.getPhone() {
+                Settings.setPhone(phone)
             }
         }
         saveButton.enabled = false
-        firstNameField.resignFirstResponder()
-        lastNameField.resignFirstResponder()
+        phoneField.resignFirstResponder()
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -51,22 +41,12 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
         saveButton.enabled = false
-        if let f_name = firstNameField.text{
-            let first_name = f_name.stringByTrimmingCharactersInSet(
+        if let temp = phoneField.text{
+            let phone = temp.stringByTrimmingCharactersInSet(
                 NSCharacterSet.whitespaceAndNewlineCharacterSet()
-            ).capitalizedString
-            firstNameField.text = first_name
-            if first_name != Settings.getFirstName() {
-                saveButton.enabled = true
-            }
-        }
-        
-        if let l_name = lastNameField.text {
-            let last_name = l_name.stringByTrimmingCharactersInSet(
-                NSCharacterSet.whitespaceAndNewlineCharacterSet()
-            ).capitalizedString
-            lastNameField.text = last_name
-            if last_name != Settings.getLastName() {
+            )
+            phoneField.text = phone
+            if phone != Settings.getPhone() {
                 saveButton.enabled = true
             }
         }
