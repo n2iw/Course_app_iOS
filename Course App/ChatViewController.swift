@@ -19,6 +19,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     @IBOutlet weak var textField: UITextField!
     private var messages: [Message] = []
     var lecture: Lecture!
+    private let context = (UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext
     
     private var socket = SocketIOClient(socketURL: NSURL(string: Settings.socketServer)!, options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])])
     private var count = 0
@@ -33,13 +34,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         }
         
         socket.on("message") {[weak weakSelf = self] data, ack in
-            if let message = data[0] as? Dictionary<String, AnyObject> {
-                print("message for group: \(message["group"]!)")
+            if let msg = CDMessage.objectFromSocketJSON(data[0], inContext: self.context) {
                 dispatch_async(dispatch_get_main_queue()) {
-                    let author = message["authorName"] as! String
-//                    let author = message["author"] as! String
-                    let msg = message["content"] as! String
-                    weakSelf?.messages.append(Message(author: author, content: msg))
+                    let message = Message(author: msg.author!, content: msg.content!)
+                    weakSelf?.messages.append(message)
                     let index = weakSelf!.messages.count - 1
                     let indexPath = NSIndexPath(forRow: index ,  inSection: 0)
                     weakSelf?.messageTableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
@@ -64,13 +62,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     @IBAction func send(sender: UIButton) {
-        if textField.text! != "" && Settings.getFirstName() != nil && Settings.getLastName() != nil {
+        if textField.text! != "" && Settings.getPhone() != nil {
             socket.emit("post", [
                 "url": "/messages",
                 "data": [
                     "group": self.lecture.id,
-//                    "author": 3,
-                    "authorName": "\(Settings.getFirstName()!) \(Settings.getLastName()!)",
+                    "author": Settings.getPhone()!,
                     "content": textField.text!
                 ]
                 ])
@@ -116,7 +113,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Message", forIndexPath: indexPath)
-        cell.textLabel?.text = messages[indexPath.row].author + ":"
+        cell.textLabel?.text = messages[indexPath.row].author! + ":"
         cell.detailTextLabel?.text = messages[indexPath.row].content
         
         return cell

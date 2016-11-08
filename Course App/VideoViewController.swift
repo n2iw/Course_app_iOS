@@ -31,7 +31,7 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
         progressBar.hidden = true
         downloading = false
         
-        let fileExtention = (NSURL(string: lecture.video_url)?.pathExtension!)!
+        let fileExtention = (NSURL(string: lecture.transcript_url)?.pathExtension!)!
         let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
         localFileURL = folder.URLByAppendingPathComponent("\(lecture.id).\(fileExtention)")
         
@@ -39,6 +39,7 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
                                delegate: self,
                                delegateQueue: NSOperationQueue.mainQueue())
         updateButtonStates()
+        print(lecture.videos)
     }
     
     private func updateButtonStates() {
@@ -76,7 +77,7 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
         } else {
             //new download
             print("new download")
-            let url = Settings.apiServer + lecture.video_url
+            let url = Settings.apiServer + lecture.transcript_url
             print("Downloading file \(url) to \(localFileURL.lastPathComponent!)")
             
             task = session?.downloadTaskWithURL(NSURL(string: url)!)
