@@ -19,16 +19,9 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
     var task: NSURLSessionDownloadTask?
     var resumeData: NSData?
     
-    @IBOutlet weak var downloadVideoButton: UIButton!
-    @IBOutlet weak var playVideoButton: UIButton!
-    @IBOutlet weak var deleteVideoButton: UIButton!
-    @IBOutlet weak var progressBar: UIProgressView!
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = lecture.name
-        progressBar.hidden = true
         downloading = false
         
         let fileExtention = (NSURL(string: lecture.transcript_url)?.pathExtension!)!
@@ -43,9 +36,9 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
     }
     
     private func updateButtonStates() {
-        playVideoButton.enabled = videoExists()
-        deleteVideoButton.enabled = videoExists()
-        downloadVideoButton.enabled = !videoExists()
+//        playVideoButton.enabled = videoExists()
+//        deleteVideoButton.enabled = videoExists()
+//        downloadVideoButton.enabled = !videoExists()
     }
     
     private func videoExists() -> Bool {
@@ -53,14 +46,14 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
     }
     
     @IBAction func downloadVideo(sender: UIButton) {
-        if task == nil {
-            downloadVideoButton.setTitle("Cancel Download", forState: .Normal)
-            progressBar.hidden = false
-            downloadVideo()
-        } else {
-            downloadVideoButton.setTitle("Download Video", forState: .Normal)
-            cancelDownload()
-        }
+//        if task == nil {
+//            downloadVideoButton.setTitle("Cancel Download", forState: .Normal)
+//            progressBar.hidden = false
+//            downloadVideo()
+//        } else {
+//            downloadVideoButton.setTitle("Download Video", forState: .Normal)
+//            cancelDownload()
+//        }
     }
     
     private func downloadVideo(){
@@ -102,12 +95,12 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
                     downloadTask: NSURLSessionDownloadTask,
                     didResumeAtOffset fileOffset: Int64,
                                       expectedTotalBytes: Int64) {
-        self.progressBar.setProgress(Float(fileOffset)/Float(expectedTotalBytes), animated: true)
+//        self.progressBar.setProgress(Float(fileOffset)/Float(expectedTotalBytes), animated: true)
     }
     
     //progress report
     func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        self.progressBar.setProgress(Float(totalBytesWritten)/Float(totalBytesExpectedToWrite), animated: true)
+//        self.progressBar.setProgress(Float(totalBytesWritten)/Float(totalBytesExpectedToWrite), animated: true)
     }
     
     //download finished
@@ -122,10 +115,6 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
         
         self.task = nil
         self.resumeData = nil
-        self.downloadVideoButton.setTitle("Download Video", forState: .Normal)
-        self.updateButtonStates()
-        self.progressBar.hidden = true
-        self.progressBar.setProgress(0.0, animated: false)
         print("download succeed")
     }
     
@@ -138,7 +127,6 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
             resumeData = error?.userInfo[NSURLSessionDownloadTaskResumeData] as? NSData
         }
         self.task = nil
-        self.downloadVideoButton.setTitle("Download Video", forState: .Normal)
     }
     
     
@@ -186,6 +174,23 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
         }
     }
     
+    //UITableViewDataSource
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.lecture.videos.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("VideoCell", forIndexPath: indexPath)
+        if let videoCell = cell as? VideoTableViewCell {
+            videoCell.titleLabel?.text = self.lecture.videos[indexPath.row].title
+            return videoCell
+        }
+        return cell
+    }
 }
 
 enum AppError : ErrorType {
