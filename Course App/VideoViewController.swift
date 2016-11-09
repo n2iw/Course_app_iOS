@@ -10,7 +10,7 @@ import UIKit
 import AVKit
 import AVFoundation
 
-class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
+class VideoViewController: UIViewController, NSURLSessionDownloadDelegate, UITableViewDataSource, UITableViewDelegate {
     
     var lecture: Lecture!
     var localFileURL: NSURL!
@@ -24,15 +24,20 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
         self.title = lecture.name
         downloading = false
         
-        let fileExtention = (NSURL(string: lecture.transcript_url)?.pathExtension!)!
-        let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-        localFileURL = folder.URLByAppendingPathComponent("\(lecture.id).\(fileExtention)")
-        
-        session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-                               delegate: self,
-                               delegateQueue: NSOperationQueue.mainQueue())
-        updateButtonStates()
-        print(lecture.videos)
+        let url = lecture.transcript_url.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        guard
+            let fileExtention = NSURL(string: url)?.pathExtension
+        else {
+            print("Transcript url wrong: \(lecture.transcript_url)")
+            return
+        }
+            let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+            localFileURL = folder.URLByAppendingPathComponent("\(lecture.id).\(fileExtention)")
+            
+            session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+                                   delegate: self,
+                                   delegateQueue: NSOperationQueue.mainQueue())
+            updateButtonStates()
     }
     
     private func updateButtonStates() {
@@ -190,6 +195,15 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
             return videoCell
         }
         return cell
+    }
+    
+    //UITableViewDelegate
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 44
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 44
     }
 }
 
