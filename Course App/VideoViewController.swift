@@ -13,11 +13,12 @@ import AVFoundation
 class VideoViewController: UIViewController, NSURLSessionDownloadDelegate, UITableViewDataSource, UITableViewDelegate {
     
     var lecture: Lecture!
-    var localFileURL: NSURL!
-    var downloading: Bool = false
-    var session: NSURLSession?
-    var task: NSURLSessionDownloadTask?
-    var resumeData: NSData?
+    private var localFileURL: NSURL!
+    private var downloading: Bool = false
+    private var session: NSURLSession?
+    private var task: NSURLSessionDownloadTask?
+    private var resumeData: NSData?
+    private var transcriptFileName: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,18 +27,20 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate, UITab
         
         let url = lecture.transcript_url.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         guard
-            let fileExtention = NSURL(string: url)?.pathExtension
+            let fileExtention = NSURL(string: url)?.pathExtension,
+            let fileName = NSURL(string: url)?.lastPathComponent
         else {
             print("Transcript url wrong: \(lecture.transcript_url)")
             return
         }
-            let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-            localFileURL = folder.URLByAppendingPathComponent("\(lecture.id).\(fileExtention)")
-            
-            session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-                                   delegate: self,
-                                   delegateQueue: NSOperationQueue.mainQueue())
-            updateButtonStates()
+        transcriptFileName = fileName
+        let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+        localFileURL = folder.URLByAppendingPathComponent("\(lecture.id).\(fileExtention)")
+        
+        session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+                               delegate: self,
+                               delegateQueue: NSOperationQueue.mainQueue())
+        updateButtonStates()
     }
     
     private func updateButtonStates() {
@@ -181,17 +184,29 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate, UITab
     
     //UITableViewDataSource
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
+//    func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
+//        return ["Transcript", "Videos"]
+//    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.lecture.videos.count
+        if section == 0 {
+            return 1
+        } else {
+            return self.lecture.videos.count
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("VideoCell", forIndexPath: indexPath)
         if let videoCell = cell as? VideoTableViewCell {
-            videoCell.titleLabel?.text = self.lecture.videos[indexPath.row].title
+            if indexPath.section == 0 {
+                videoCell.titleLabel?.text = transcriptFileName
+            } else {
+                videoCell.titleLabel?.text = self.lecture.videos[indexPath.row].title
+            }
             return videoCell
         }
         return cell
