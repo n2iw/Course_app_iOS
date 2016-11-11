@@ -13,12 +13,12 @@ class CourseList {
     private let server: APIClient
     private let path: String
     private let defaults = NSUserDefaults.standardUserDefaults()
+    private var updatedAt: NSDate = NSDate()
     
     init(url: String, path: String) {
         server = APIClient(baseURL: url)
         self.path = path
         if let savedCourse = defaults.arrayForKey("Courses") {
-            print("Load Saved course")
             for c in savedCourse {
                 if c is [String: AnyObject] {
                     let course = Course(id: c["id"] as! Int, name: c["name"] as! String)
@@ -38,11 +38,18 @@ class CourseList {
         }
     }
     
+    func updateCourses(callback: () -> Void) {
+        if updatedAt.timeIntervalSinceNow < -5 { //update at most once every 5 seconds
+            fetch(callback)
+        }
+    }
+    
     private func fetch(callback: (() -> Void)?) {
         server.get(path) {success, data in
             if success {
                 if let courses = data as? [[String:AnyObject]] {
                     print("Downloaded \(courses.count) courses")
+                    self.updatedAt = NSDate()
                     self.courses = Array()
                     for element in courses {
                         self.courses.append(Course(id: element["id"] as! Int,
