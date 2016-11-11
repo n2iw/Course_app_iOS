@@ -9,162 +9,116 @@
 import UIKit
 import AVKit
 import AVFoundation
+import QuickLook
 
-class VideoViewController: UIViewController, NSURLSessionDownloadDelegate, UITableViewDataSource, UITableViewDelegate {
+class VideoViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, QLPreviewControllerDataSource {
     
     var lecture: Lecture!
-    private var localFileURL: NSURL!
-    private var downloading: Bool = false
-    private var session: NSURLSession?
-    private var task: NSURLSessionDownloadTask?
-    private var resumeData: NSData?
+    private var localTranscriptFileURL: NSURL?
     private var transcriptFileName: String?
+    private var transcriptURL: NSURL?
+    private var downloader: Downloader?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = lecture.name
-        downloading = false
         
-        let url = lecture.transcript_url.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        let urlString = Settings.apiServer  + lecture.transcript_url.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         guard
-            let fileExtention = NSURL(string: url)?.pathExtension,
-            let fileName = NSURL(string: url)?.lastPathComponent
+            let url = NSURL(string: urlString),
+            let fileExtention = url.pathExtension,
+            let fileName = url.lastPathComponent
         else {
             print("Transcript url wrong: \(lecture.transcript_url)")
             return
         }
+        
         transcriptFileName = fileName
         let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-        localFileURL = folder.URLByAppendingPathComponent("\(lecture.id).\(fileExtention)")
+        localTranscriptFileURL = folder.URLByAppendingPathComponent("\(lecture.id).\(fileExtention)")
         
-        session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-                               delegate: self,
-                               delegateQueue: NSOperationQueue.mainQueue())
-        updateButtonStates()
+        transcriptURL = NSURL(string: urlString)
     }
     
-    private func updateButtonStates() {
-//        playVideoButton.enabled = videoExists()
-//        deleteVideoButton.enabled = videoExists()
-//        downloadVideoButton.enabled = !videoExists()
-    }
     
-    private func videoExists() -> Bool {
-        return NSFileManager.defaultManager().fileExistsAtPath(localFileURL.path!)
-    }
-    
-    @IBAction func downloadVideo(sender: UIButton) {
-//        if task == nil {
-//            downloadVideoButton.setTitle("Cancel Download", forState: .Normal)
-//            progressBar.hidden = false
-//            downloadVideo()
-//        } else {
-//            downloadVideoButton.setTitle("Download Video", forState: .Normal)
-//            cancelDownload()
-//        }
-    }
-    
-    private func downloadVideo(){
-        if task != nil {
-            print("Lecture: already downloading, can't download again")
-            return
+    // Table row selected
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        print("session: \(indexPath.section) row: \(indexPath.row) touched")
+        if (indexPath.section == 0) {
+            viewPDF(tableView, indexPath: indexPath)
         }
-        
-        //resume a download
-        if let data = resumeData {
-            print("resume download")
-            task = session?.downloadTaskWithResumeData(data)
-            task!.resume()
+    }
+    
+    private func viewPDF(tableView: UITableView ,indexPath: NSIndexPath) {
+        if fileExists(localTranscriptFileURL) {
+            let preview = QLPreviewController()
+            preview.dataSource = self
+            if let nvc = self.navigationController {
+                nvc.pushViewController(preview, animated: true)
+            } else {
+                self.presentViewController(preview, animated: true, completion: nil)
+            }
         } else {
-            //new download
-            print("new download")
-            let url = Settings.apiServer + lecture.transcript_url
-            print("Downloading file \(url) to \(localFileURL.lastPathComponent!)")
-            
-            task = session?.downloadTaskWithURL(NSURL(string: url)!)
-            task!.resume()
-        }
-    }
-    
-    
-    private func cancelDownload() {
-        if let task = self.task {
-            print("Cancel download")
-            task.cancelByProducingResumeData() {
-                resumeData in
-                self.resumeData = resumeData
-                self.task = nil
+            guard let rUrl = transcriptURL,
+                let lUrl = localTranscriptFileURL
+                else {
+                  return
+            }
+            let cell = tableView.dequeueReusableCellWithIdentifier("VideoCell", forIndexPath: indexPath)
+            if let videoCell = cell as? VideoTableViewCell {
+                downloader = Downloader(remoteURL: rUrl, localURL: lUrl, indicator: videoCell.progressBar)
+                downloader?.start()
             }
         }
     }
     
-    //download resume
-    func URLSession(session: NSURLSession,
-                    downloadTask: NSURLSessionDownloadTask,
-                    didResumeAtOffset fileOffset: Int64,
-                                      expectedTotalBytes: Int64) {
-//        self.progressBar.setProgress(Float(fileOffset)/Float(expectedTotalBytes), animated: true)
+    func numberOfPreviewItemsInPreviewController(controller: QLPreviewController) -> Int {
+        return 1
     }
     
-    //progress report
-    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-//        self.progressBar.setProgress(Float(totalBytesWritten)/Float(totalBytesExpectedToWrite), animated: true)
-    }
-    
-    //download finished
-    func URLSession(session: NSURLSession,
-                      downloadTask: NSURLSessionDownloadTask,
-                                   didFinishDownloadingToURL location: NSURL) {
-        do {
-            try NSFileManager.defaultManager().moveItemAtURL(location, toURL: self.localFileURL)
-        } catch {
-            print("Move file \(location.path!) failed")
-        }
-        
-        self.task = nil
-        self.resumeData = nil
-        print("download succeed")
-    }
-    
-    //download failed
-    func URLSession(session: NSURLSession,
-                      task: NSURLSessionTask,
-                           didCompleteWithError error: NSError?) {
-        if error != nil {
-            print("download failed")
-            resumeData = error?.userInfo[NSURLSessionDownloadTaskResumeData] as? NSData
-        }
-        self.task = nil
-    }
-    
-    
-    @IBAction func playVideo(sender: UIButton) {
-            do {
-                try playVideo()
-            } catch AppError.InvalidResource(let name, let type) {
-                debugPrint("Could not find resource \(name).\(type)")
-            } catch {
-                debugPrint("Generic error")
-            }
-    }
-    
-    private func playVideo() throws {
-        let player = AVPlayer(URL: localFileURL)
-        let playerController = AVPlayerViewController()
-        playerController.player = player
-        self.presentViewController(playerController, animated: true) {
-            player.play()
+    func previewController(controller: QLPreviewController,
+                           previewItemAtIndex index: Int) -> QLPreviewItem {
+        if let url = localTranscriptFileURL{
+            return url
+        } else {
+            return NSURL()
         }
     }
     
-    @IBAction func deleteVideo(sender: UIButton) {
-        do {
-            try NSFileManager.defaultManager().removeItemAtURL(localFileURL)
-        } catch {
-            print("Can't delete file at: \(localFileURL.path!)")
+    private func fileExists(localFileURL: NSURL?) -> Bool {
+        guard let url = localFileURL
+        else {
+            return false
         }
-        updateButtonStates()
+        return NSFileManager.defaultManager().fileExistsAtPath(url.path!)
     }
+    
+//    func playVideo(sender: UIButton) {
+//            do {
+//                try playVideo()
+//            } catch AppError.InvalidResource(let name, let type) {
+//                debugPrint("Could not find resource \(name).\(type)")
+//            } catch {
+//                debugPrint("Generic error")
+//            }
+//    }
+//    
+//    private func playVideo() throws {
+//        let player = AVPlayer(URL: localFileURL)
+//        let playerController = AVPlayerViewController()
+//        playerController.player = player
+//        self.presentViewController(playerController, animated: true) {
+//            player.play()
+//        }
+//    }
+    
+//    func deleteVideo(sender: UIButton) {
+//        do {
+//            try NSFileManager.defaultManager().removeItemAtURL(localFileURL)
+//        } catch {
+//            print("Can't delete file at: \(localFileURL.path!)")
+//        }
+//    }
     
     
     override func didReceiveMemoryWarning() {
