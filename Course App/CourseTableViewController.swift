@@ -14,9 +14,15 @@ class CourseTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.courseList.getCourses() {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         self.courseList.updateCourses() {
             dispatch_async(dispatch_get_main_queue()) {
                 self.tableView.reloadData()
