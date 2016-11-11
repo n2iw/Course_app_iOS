@@ -12,7 +12,11 @@ class Lecture {
     let name: String
     let id: Int
     let transcript_url: String
+    var localFileURL: NSURL? = nil
+    var remoteURL: NSURL? = nil
+    var fileName: String? = nil
     var videos: [Video] = []
+    var progress: Float = 0.0
     
     init(id: Int, name: String, transcript_url: String) {
         self.id = id

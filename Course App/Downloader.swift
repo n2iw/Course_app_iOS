@@ -7,10 +7,9 @@
 //
 
 import Foundation
-import UIKit
 
 class Downloader: NSObject, NSURLSessionDownloadDelegate  {
-    private var progressIndicator: UIProgressView?
+    private var progressCB: ((Float) -> Void)?
     private var remoteURL: NSURL
     private var localURL: NSURL
     
@@ -18,12 +17,10 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
     private var task: NSURLSessionDownloadTask?
     private var resumeData: NSData?
     
-    init(remoteURL: NSURL, localURL: NSURL, indicator: UIProgressView?) {
+    init(remoteURL: NSURL, localURL: NSURL, progressCB: ((Float) -> Void )?) {
         self.remoteURL = remoteURL
         self.localURL = localURL
-        self.progressIndicator = indicator
-        
-        
+        self.progressCB = progressCB
     }
     
     func start() {
@@ -70,14 +67,12 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
                     downloadTask: NSURLSessionDownloadTask,
                     didResumeAtOffset fileOffset: Int64,
                                       expectedTotalBytes: Int64) {
-        self.progressIndicator?.hidden = false
-        self.progressIndicator?.setProgress(Float(fileOffset)/Float(expectedTotalBytes), animated: true)
+        self.progressCB?(Float(fileOffset)/Float(expectedTotalBytes))
     }
     
     //progress report
     func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        self.progressIndicator?.hidden = false
-        self.progressIndicator?.setProgress(Float(totalBytesWritten)/Float(totalBytesExpectedToWrite), animated: true)
+        self.progressCB?(Float(totalBytesWritten)/Float(totalBytesExpectedToWrite))
     }
     
     //download finished
@@ -92,7 +87,6 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
         
         self.task = nil
         self.resumeData = nil
-        self.progressIndicator?.hidden = true
     }
     
     //download failed
@@ -107,7 +101,6 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
             print("download \(remoteURL) succeed")
         }
         self.task = nil
-        self.progressIndicator?.hidden = true
     }
     
 }

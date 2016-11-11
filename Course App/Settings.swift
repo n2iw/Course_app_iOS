@@ -10,8 +10,8 @@ import Foundation
 
 public class Settings {
 //    static let apiServer = "http://104.236.56.153:1337" //Ocean2
-//    static let apiServer = "http://192.168.10.10:1337" //local vagrant
-    static let apiServer = "https://shaban.rit.albany.edu" //production
+    static let apiServer = "http://192.168.10.10:1337" //local vagrant
+//    static let apiServer = "https://shaban.rit.albany.edu" //production
 //    static let apiServer = "https://shaban-test.rit.albany.edu" //testing
 //    static let apiServer = "https://shaban-stage.rit.albany.edu" //staging
     

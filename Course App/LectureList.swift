@@ -22,7 +22,6 @@ class LectureList {
         self.path = path
         self.courseID = courseID
         if let savedLectures = defaults.arrayForKey("\(self.courseID)"){
-            print("Load Saved lectures")
             for l in savedLectures {
                 let lecture = Lecture(id: l["id"] as! Int,
                                       name: l["description"] as! String,

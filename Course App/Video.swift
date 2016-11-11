@@ -13,6 +13,9 @@ class Video {
     var lecture: Int
     var title: String
     var url: String
+    var localFileURL: NSURL? = nil
+    var remoteURL: NSURL? = nil
+    var progress: Float = 0.0
     
     init(id: Int, lecture: Int, title: String, url: String) {
         self.id = id

@@ -324,22 +324,24 @@
                                     <segue destination="4Au-Ii-EbK" kind="show" identifier="chat" id="I0P-MK-m3e"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="54" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6aU-yn-yiB">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="48" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6aU-yn-yiB">
                                 <rect key="frame" x="0.0" y="110" width="600" height="433"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="VideoCell" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VideoCell" rowHeight="54" id="E2f-oK-urJ" customClass="VideoTableViewCell" customModule="Shaban" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="600" height="54"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="VideoCell" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VideoCell" rowHeight="48" id="E2f-oK-urJ" customClass="VideoTableViewCell" customModule="Shaban" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="48"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="E2f-oK-urJ" id="V9d-PO-kej">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="53"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="47"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Hy0-eW-90h">
-                                                    <rect key="frame" x="16" y="42" width="576" height="2"/>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Hy0-eW-90h">
+                                                    <rect key="frame" x="8" y="37" width="576" height="2"/>
+                                                    <color key="progressTintColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="trackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 </progressView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="js7-AH-C06">
-                                                    <rect key="frame" x="16" y="16" width="576" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="js7-AH-C06">
+                                                    <rect key="frame" x="8" y="8" width="584" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="507" id="QVr-lM-NAa"/>
                                                         <constraint firstAttribute="width" constant="507" id="aqu-zN-Q2H"/>
@@ -356,13 +358,19 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="js7-AH-C06" firstAttribute="trailing" secondItem="Hy0-eW-90h" secondAttribute="trailing" id="8aC-IQ-6lD"/>
-                                                <constraint firstItem="Hy0-eW-90h" firstAttribute="top" secondItem="js7-AH-C06" secondAttribute="bottom" constant="5" id="KUL-bI-NE3"/>
-                                                <constraint firstItem="js7-AH-C06" firstAttribute="leading" secondItem="V9d-PO-kej" secondAttribute="leadingMargin" constant="8" id="fyN-Di-Mnb"/>
-                                                <constraint firstItem="js7-AH-C06" firstAttribute="leading" secondItem="Hy0-eW-90h" secondAttribute="leading" id="q5x-gF-bMt"/>
+                                                <constraint firstItem="js7-AH-C06" firstAttribute="leading" secondItem="V9d-PO-kej" secondAttribute="leadingMargin" id="HY1-AH-LcH"/>
+                                                <constraint firstItem="Hy0-eW-90h" firstAttribute="top" secondItem="js7-AH-C06" secondAttribute="bottom" constant="8" symbolic="YES" id="Rec-yH-7PG"/>
+                                                <constraint firstItem="js7-AH-C06" firstAttribute="trailing" secondItem="V9d-PO-kej" secondAttribute="trailingMargin" id="UK7-xb-aWm"/>
+                                                <constraint firstItem="Hy0-eW-90h" firstAttribute="leading" secondItem="js7-AH-C06" secondAttribute="leading" id="iWe-Ml-h74"/>
                                                 <constraint firstItem="js7-AH-C06" firstAttribute="centerY" secondItem="V9d-PO-kej" secondAttribute="centerY" id="sc4-Ew-8hf"/>
-                                                <constraint firstItem="js7-AH-C06" firstAttribute="trailing" secondItem="V9d-PO-kej" secondAttribute="trailingMargin" id="uc5-9y-B2T"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Hy0-eW-90h" secondAttribute="trailing" constant="8" id="vKh-X1-p1F"/>
+                                                <constraint firstItem="js7-AH-C06" firstAttribute="top" secondItem="V9d-PO-kej" secondAttribute="topMargin" id="ws4-UE-uCj"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="sc4-Ew-8hf"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="progressBar" destination="Hy0-eW-90h" id="oSz-pv-R2b"/>
@@ -396,6 +404,9 @@
                             </mask>
                         </variation>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="6aU-yn-yiB" id="qqe-R7-CMQ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nHS-po-qy3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
