@@ -11,4 +11,5 @@ import UIKit
 class VideoTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var videoButton: UIButton!
+    @IBOutlet weak var progressBar: UIProgressView!
 }

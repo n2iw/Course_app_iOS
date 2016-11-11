@@ -35,6 +35,7 @@
 		1A91FD0F1D36052E00D646FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A91FD0D1D36052E00D646FC /* Main.storyboard */; };
 		1A91FD111D36052E00D646FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A91FD101D36052E00D646FC /* Assets.xcassets */; };
 		1A91FD141D36052E00D646FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A91FD121D36052E00D646FC /* LaunchScreen.storyboard */; };
+		1ABC08FF1DD56EEA005FFDCE /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABC08FE1DD56EEA005FFDCE /* Downloader.swift */; };
 		1AF6FD3A1DC7C3CD00DB693D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6FD391DC7C3CD00DB693D /* Settings.swift */; };
 		5672DD5850541351D10F11CE /* Pods_Course_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056731D1548F89682BBF99F6 /* Pods_Course_App.framework */; };
 /* End PBXBuildFile section */
@@ -71,6 +72,7 @@
 		1A91FD101D36052E00D646FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A91FD131D36052E00D646FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1A91FD151D36052E00D646FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1ABC08FE1DD56EEA005FFDCE /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		1AF6FD391DC7C3CD00DB693D /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		666D26FD5F4BAFFA4DABE257 /* Pods-Course App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Course App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Course App/Pods-Course App.debug.xcconfig"; sourceTree = "<group>"; };
 		C4984B72E9AB73DB593E231C /* Pods-Course App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Course App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Course App/Pods-Course App.release.xcconfig"; sourceTree = "<group>"; };
@@ -102,6 +104,11 @@
 		1A486FC81D7874FF00A6D584 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1A486FC41D78726100A6D584 /* Course.swift */,
+				1A486FC91D792E4700A6D584 /* Lecture.swift */,
+				1A326B891DD1180300968D6C /* Video.swift */,
+				1A326B8B1DD1266A00968D6C /* Message.swift */,
+				1A326B801DD0D87C00968D6C /* Model.xcdatamodeld */,
 				1A326B9D1DD160CF00968D6C /* CDMessage+CoreDataProperties.swift */,
 				1A326B9E1DD160CF00968D6C /* CDMessage.swift */,
 				1A326B8D1DD1307300968D6C /* CDCourse+CoreDataProperties.swift */,
@@ -110,17 +117,6 @@
 				1A326B901DD1307300968D6C /* CDVideo.swift */,
 				1A326B911DD1307300968D6C /* CDLecture+CoreDataProperties.swift */,
 				1A326B921DD1307300968D6C /* CDLecture.swift */,
-				1A770EFE1D3C733700722164 /* APIClient.swift */,
-				1A486FC41D78726100A6D584 /* Course.swift */,
-				1A486FC91D792E4700A6D584 /* Lecture.swift */,
-				1A47D12E1DAC22B600E6B198 /* LectureList.swift */,
-				1A47D1301DAC22FB00E6B198 /* CourseList.swift */,
-				1AF6FD391DC7C3CD00DB693D /* Settings.swift */,
-				1A326B801DD0D87C00968D6C /* Model.xcdatamodeld */,
-				1A326B891DD1180300968D6C /* Video.swift */,
-				1A326B8B1DD1266A00968D6C /* Message.swift */,
-				1A326BA11DD1831200968D6C /* JSONDate.swift */,
-				1A326BA31DD18D4500968D6C /* CoreDataTableViewController.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -146,9 +142,11 @@
 		1A91FD081D36052E00D646FC /* Shaban */ = {
 			isa = PBXGroup;
 			children = (
+				1ABC08FD1DD56E7C005FFDCE /* Service */,
 				1A486FC81D7874FF00A6D584 /* Model */,
 				1A47D12D1DAC1AEF00E6B198 /* View */,
 				1A91FD091D36052E00D646FC /* AppDelegate.swift */,
+				1A326BA31DD18D4500968D6C /* CoreDataTableViewController.swift */,
 				1A29A1051D76AA2C00BE733D /* CourseTableViewController.swift */,
 				1A29A1071D76B7FB00BE733D /* LectureTableViewController.swift */,
 				1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */,
@@ -158,6 +156,19 @@
 			);
 			name = Shaban;
 			path = "Course App";
+			sourceTree = "<group>";
+		};
+		1ABC08FD1DD56E7C005FFDCE /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				1A47D12E1DAC22B600E6B198 /* LectureList.swift */,
+				1A47D1301DAC22FB00E6B198 /* CourseList.swift */,
+				1A770EFE1D3C733700722164 /* APIClient.swift */,
+				1AF6FD391DC7C3CD00DB693D /* Settings.swift */,
+				1A326BA11DD1831200968D6C /* JSONDate.swift */,
+				1ABC08FE1DD56EEA005FFDCE /* Downloader.swift */,
+			);
+			name = Service;
 			sourceTree = "<group>";
 		};
 		24D43B6E7AF0662F70D29841 /* Pods */ = {
@@ -323,6 +334,7 @@
 				1A326B981DD1307300968D6C /* CDLecture+CoreDataProperties.swift in Sources */,
 				1A326B971DD1307300968D6C /* CDVideo.swift in Sources */,
 				1A29A1081D76B7FB00BE733D /* LectureTableViewController.swift in Sources */,
+				1ABC08FF1DD56EEA005FFDCE /* Downloader.swift in Sources */,
 				1A326B961DD1307300968D6C /* CDVideo+CoreDataProperties.swift in Sources */,
 				1A326B991DD1307300968D6C /* CDLecture.swift in Sources */,
 				1A770EFF1D3C733700722164 /* APIClient.swift in Sources */,
