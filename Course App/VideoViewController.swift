@@ -30,6 +30,9 @@ class VideoViewController: UIViewController, UITableViewDataSource, UITableViewD
             lecture.fileName = fileName
             let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
             lecture.localFileURL = folder.URLByAppendingPathComponent("lecture_\(lecture.id).\(fileExtention)")
+            if fileExists(lecture.localFileURL) {
+                lecture.progress = 1.0
+            }
             
             lecture.remoteURL = NSURL(string: urlString)
             
@@ -45,6 +48,9 @@ class VideoViewController: UIViewController, UITableViewDataSource, UITableViewD
                 
                 let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
                 video.localFileURL = folder.URLByAppendingPathComponent("video_\(video.id).\(fileExtention)")
+                if fileExists(video.localFileURL) {
+                    video.progress = 1.0
+                }
                 
                 video.remoteURL = NSURL(string: urlString)
             }
