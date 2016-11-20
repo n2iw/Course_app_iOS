@@ -25,6 +25,7 @@
 		1A326BA21DD1831200968D6C /* JSONDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A326BA11DD1831200968D6C /* JSONDate.swift */; };
 		1A326BA41DD18D4500968D6C /* CoreDataTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A326BA31DD18D4500968D6C /* CoreDataTableViewController.swift */; };
 		1A326BA61DD1A13500968D6C /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A326BA51DD1A13500968D6C /* VideoTableViewCell.swift */; };
+		1A4772DC1DE0FA4C00FAF83C /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4772DB1DE0FA4C00FAF83C /* MessageList.swift */; };
 		1A47D12F1DAC22B600E6B198 /* LectureList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47D12E1DAC22B600E6B198 /* LectureList.swift */; };
 		1A47D1311DAC22FB00E6B198 /* CourseList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A47D1301DAC22FB00E6B198 /* CourseList.swift */; };
 		1A486FC51D78726100A6D584 /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A486FC41D78726100A6D584 /* Course.swift */; };
@@ -60,6 +61,7 @@
 		1A326BA11DD1831200968D6C /* JSONDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONDate.swift; sourceTree = "<group>"; };
 		1A326BA31DD18D4500968D6C /* CoreDataTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataTableViewController.swift; sourceTree = "<group>"; };
 		1A326BA51DD1A13500968D6C /* VideoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
+		1A4772DB1DE0FA4C00FAF83C /* MessageList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
 		1A47D12E1DAC22B600E6B198 /* LectureList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureList.swift; sourceTree = "<group>"; };
 		1A47D1301DAC22FB00E6B198 /* CourseList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseList.swift; sourceTree = "<group>"; };
 		1A486FC41D78726100A6D584 /* Course.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				1AF6FD391DC7C3CD00DB693D /* Settings.swift */,
 				1A326BA11DD1831200968D6C /* JSONDate.swift */,
 				1ABC08FE1DD56EEA005FFDCE /* Downloader.swift */,
+				1A4772DB1DE0FA4C00FAF83C /* MessageList.swift */,
 			);
 			name = Service;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				1A29A1061D76AA2C00BE733D /* CourseTableViewController.swift in Sources */,
 				1AF6FD3A1DC7C3CD00DB693D /* Settings.swift in Sources */,
 				1A326BA41DD18D4500968D6C /* CoreDataTableViewController.swift in Sources */,
+				1A4772DC1DE0FA4C00FAF83C /* MessageList.swift in Sources */,
 				1A326B821DD0D87C00968D6C /* Model.xcdatamodeld in Sources */,
 				1A770EF91D3C35EE00722164 /* ChatViewController.swift in Sources */,
 				1A47D1311DAC22FB00E6B198 /* CourseList.swift in Sources */,
