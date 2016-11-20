@@ -19,11 +19,10 @@
     </entity>
     <entity name="CDMessage" representedClassName=".CDMessage" syncable="YES">
         <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="authorName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="group" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
     <entity name="CDVideo" representedClassName=".CDVideo" syncable="YES">
@@ -35,9 +34,9 @@
         <relationship name="lecture" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDLecture" inverseName="videos" inverseEntity="CDLecture" syncable="YES"/>
     </entity>
     <elements>
-        <element name="CDMessage" positionX="-452" positionY="243" width="128" height="148"/>
-        <element name="CDVideo" positionX="-38" positionY="72" width="128" height="133"/>
-        <element name="CDLecture" positionX="-272" positionY="27" width="128" height="163"/>
         <element name="CDCourse" positionX="-486" positionY="54" width="128" height="118"/>
+        <element name="CDLecture" positionX="-272" positionY="27" width="128" height="163"/>
+        <element name="CDMessage" positionX="-452" positionY="243" width="128" height="135"/>
+        <element name="CDVideo" positionX="-38" positionY="72" width="128" height="133"/>
     </elements>
 </model>

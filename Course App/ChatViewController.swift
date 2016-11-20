@@ -15,10 +15,22 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     let TAB_BAR_HEIGHT = 49
 
     @IBOutlet weak var messageTableView: UITableView!
-    
     @IBOutlet weak var textField: UITextField!
-    private var messages: [Message] = []
-    var lecture: Lecture!
+    lazy private var messageList: MessageList = self.newMessageList()
+    
+    var lecture: Lecture! {
+        didSet {
+            self.messageList = newMessageList()
+            self.messageList.fetchMessages() {
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.messageTableView.reloadData()
+                    let index = self.messageList.messages.count - 1
+                    let indexPath = NSIndexPath(forRow: index ,  inSection: 0)
+                    self.messageTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
+                }
+            }
+        }
+    }
     private let context = (UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext
     
     private var socket = SocketIOClient(socketURL: NSURL(string: Settings.socketServer)!, options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])])
@@ -36,9 +48,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         socket.on("message") {[weak weakSelf = self] data, ack in
             if let msg = CDMessage.objectFromSocketJSON(data[0], inContext: self.context) {
                 dispatch_async(dispatch_get_main_queue()) {
-                    let message = Message(author: msg.author!, content: msg.content!)
-                    weakSelf?.messages.append(message)
-                    let index = weakSelf!.messages.count - 1
+                    weakSelf?.messageList.messages.append(msg)
+                    let index = weakSelf!.messageList.messages.count - 1
                     let indexPath = NSIndexPath(forRow: index ,  inSection: 0)
                     weakSelf?.messageTableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
                     weakSelf?.messageTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
@@ -56,6 +67,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         
     }
+    
+    private func newMessageList() -> MessageList {
+        return MessageList(id: lecture.id, url: Settings.apiServer, path: Settings.messagePath, context: context!)
+        
+    }
+
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         view.endEditing(true)
@@ -108,13 +125,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return self.messages.count
+        return self.messageList.messages.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Message", forIndexPath: indexPath)
-        cell.textLabel?.text = messages[indexPath.row].author! + ":"
-        cell.detailTextLabel?.text = messages[indexPath.row].content
+        cell.textLabel?.text = messageList.messages[indexPath.row].author! + ":"
+        cell.detailTextLabel?.text = messageList.messages[indexPath.row].content
         
         return cell
     }
