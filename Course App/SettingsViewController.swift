@@ -28,6 +28,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         }
         saveButton.enabled = false
         phoneField.resignFirstResponder()
+        self.tabBarController?.selectedIndex =  Settings.COURSES_TAB_INDEX
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {

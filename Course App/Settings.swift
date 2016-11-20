@@ -24,6 +24,8 @@ public class Settings {
     static let FIRST_NAME = "firstName"
     static let LAST_NAME = "lastName"
     static let PHONE = "phone"
+    static let SETTINGS_TAB_INDEX = 1 //tab index of settings tab
+    static let COURSES_TAB_INDEX = 0 //tab index of courses tab
     
     static private let defaults = NSUserDefaults.standardUserDefaults()
     

@@ -14,6 +14,13 @@ class CourseTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let phone = Settings.getPhone()
+        where phone != ""
+        else {
+            self.tabBarController?.selectedIndex = Settings.SETTINGS_TAB_INDEX
+            return
+        }
+        
         self.courseList.getCourses() {
             dispatch_async(dispatch_get_main_queue()) {
                 self.tableView.reloadData()
