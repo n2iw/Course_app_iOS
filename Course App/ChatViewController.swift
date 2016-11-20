@@ -24,9 +24,11 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             self.messageList.fetchMessages() {
                 dispatch_async(dispatch_get_main_queue()) {
                     self.messageTableView.reloadData()
-                    let index = self.messageList.messages.count - 1
-                    let indexPath = NSIndexPath(forRow: index ,  inSection: 0)
-                    self.messageTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
+                    if self.messageList.messages.count != 0 {
+                        let index = self.messageList.messages.count - 1
+                        let indexPath = NSIndexPath(forRow: index ,  inSection: 0)
+                        self.messageTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
+                    }
                 }
             }
         }
@@ -66,6 +68,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         
+        print("Current tabeIndex: \(self.tabBarController?.selectedIndex)")
+        
     }
     
     private func newMessageList() -> MessageList {
@@ -91,10 +95,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             textField.text = ""
             textField.resignFirstResponder()
         } else {
-            print("empty text or names")
             let alert = UIAlertController(title: "Couldn't send message", message: "Please enter your registered phone number in \"Settings\" tab!", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
+            self.tabBarController?.selectedIndex = Settings.SETTINGS_TAB_INDEX
         }
     }
     
