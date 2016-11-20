@@ -79,7 +79,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     @IBAction func send(sender: UIButton) {
-        if textField.text! != "" && Settings.getPhone() != nil {
+        if textField.text! != "" && Settings.getPhone() != nil && Settings.getPhone() != "" {
             socket.emit("post", [
                 "url": "/messages",
                 "data": [
@@ -92,6 +92,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             textField.resignFirstResponder()
         } else {
             print("empty text or names")
+            let alert = UIAlertController(title: "Couldn't send message", message: "Please enter your registered phone number in \"Settings\" tab!", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
         }
     }
     
