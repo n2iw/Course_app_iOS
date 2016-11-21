@@ -83,23 +83,27 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     @IBAction func send(sender: UIButton) {
-        if textField.text! != "" && Settings.getPhone() != nil && Settings.getPhone() != "" {
-            socket.emit("post", [
-                "url": "/messages",
-                "data": [
-                    "group": self.lecture.id,
-                    "author": Settings.getPhone()!,
-                    "content": textField.text!
-                ]
-                ])
-            textField.text = ""
-            textField.resignFirstResponder()
-        } else {
+        guard let text = textField.text where text != "",
+        let phone = Settings.getPhone() where phone != "",
+        let userName = Settings.getUserName() where userName != ""
+        else {
             let alert = UIAlertController(title: "Couldn't send message", message: "Please enter your registered phone number in \"Settings\" tab!", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
             self.tabBarController?.selectedIndex = Settings.SETTINGS_TAB_INDEX
+            return
         }
+        
+        socket.emit("post", [
+            "url": "/messages",
+            "data": [
+                "group": self.lecture.id,
+                "author": phone,
+                "content": text
+            ]
+            ])
+        textField.text = ""
+        textField.resignFirstResponder()
     }
     
     func keyboardWillShow(notification: NSNotification) {

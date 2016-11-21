@@ -13,7 +13,6 @@
 		1A29A10E1D774DAA00BE733D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */; };
 		1A326B821DD0D87C00968D6C /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1A326B801DD0D87C00968D6C /* Model.xcdatamodeld */; };
 		1A326B8A1DD1180300968D6C /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A326B891DD1180300968D6C /* Video.swift */; };
-		1A326B8C1DD1266A00968D6C /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A326B8B1DD1266A00968D6C /* Message.swift */; };
 		1A326B941DD1307300968D6C /* CDCourse+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A326B8D1DD1307300968D6C /* CDCourse+CoreDataProperties.swift */; };
 		1A326B951DD1307300968D6C /* CDCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A326B8E1DD1307300968D6C /* CDCourse.swift */; };
 		1A326B961DD1307300968D6C /* CDVideo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A326B8F1DD1307300968D6C /* CDVideo+CoreDataProperties.swift */; };
@@ -49,7 +48,6 @@
 		1A29A10D1D774DAA00BE733D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		1A326B811DD0D87C00968D6C /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		1A326B891DD1180300968D6C /* Video.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
-		1A326B8B1DD1266A00968D6C /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		1A326B8D1DD1307300968D6C /* CDCourse+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDCourse+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1A326B8E1DD1307300968D6C /* CDCourse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDCourse.swift; sourceTree = "<group>"; };
 		1A326B8F1DD1307300968D6C /* CDVideo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CDVideo+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -109,7 +107,6 @@
 				1A486FC41D78726100A6D584 /* Course.swift */,
 				1A486FC91D792E4700A6D584 /* Lecture.swift */,
 				1A326B891DD1180300968D6C /* Video.swift */,
-				1A326B8B1DD1266A00968D6C /* Message.swift */,
 				1A326B801DD0D87C00968D6C /* Model.xcdatamodeld */,
 				1A326B9D1DD160CF00968D6C /* CDMessage+CoreDataProperties.swift */,
 				1A326B9E1DD160CF00968D6C /* CDMessage.swift */,
@@ -332,7 +329,6 @@
 				1A91FD0A1D36052E00D646FC /* AppDelegate.swift in Sources */,
 				1A326B951DD1307300968D6C /* CDCourse.swift in Sources */,
 				1A326BA01DD160CF00968D6C /* CDMessage.swift in Sources */,
-				1A326B8C1DD1266A00968D6C /* Message.swift in Sources */,
 				1A326B941DD1307300968D6C /* CDCourse+CoreDataProperties.swift in Sources */,
 				1A326BA21DD1831200968D6C /* JSONDate.swift in Sources */,
 				1A326B981DD1307300968D6C /* CDLecture+CoreDataProperties.swift in Sources */,

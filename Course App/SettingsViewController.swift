@@ -12,10 +12,17 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var phoneField: UITextField!
     @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var promptLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         phoneField.text = Settings.getPhone()
+        let userName = Settings.getUserName()
+        if userName != nil && userName != "" {
+            self.promptLabel.text = "Name: \(userName!)"
+            self.promptLabel.textColor = UIColor.blueColor()
+            self.phoneField.textColor = UIColor.blueColor()
+        }
 
         saveButton.enabled = false
     }
@@ -23,12 +30,26 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     @IBAction func savePhone(sender: UIButton) {
         if let phone = phoneField.text{
             if phone != Settings.getPhone() {
-                Settings.setPhone(phone)
+                Settings.setPhone(phone,
+                    succeed: { userName in
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.promptLabel.text = "Name: \(userName)"
+                            self.promptLabel.textColor = UIColor.blueColor()
+                            self.phoneField.textColor = UIColor.blueColor()
+                        }
+                    },
+                    fail: {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.promptLabel.text = "Phone number not registered!"
+                            self.promptLabel.textColor = UIColor.redColor()
+                            self.phoneField.textColor = UIColor.redColor()
+                        }
+                })
             }
         }
         saveButton.enabled = false
         phoneField.resignFirstResponder()
-        self.tabBarController?.selectedIndex =  Settings.COURSES_TAB_INDEX
+//        self.tabBarController?.selectedIndex =  Settings.COURSES_TAB_INDEX
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {

@@ -37,7 +37,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YkU-y1-til">
-                                <rect key="frame" x="143" y="28" width="437" height="30"/>
+                                <rect key="frame" x="143" y="57" width="437" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="phonePad" returnKeyType="done"/>
                                 <connections>
@@ -45,13 +45,22 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone Number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FjX-xC-d4g">
-                                <rect key="frame" x="20" y="32" width="115" height="21"/>
+                                <rect key="frame" x="20" y="62" width="115" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please enter registered phone number." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mcF-7s-yYa">
+                                <rect key="frame" x="20" y="28" width="560" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="Frh-F9-agT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n5w-LT-8dc">
-                                <rect key="frame" x="546" y="66" width="34" height="30"/>
+                                <rect key="frame" x="546" y="95" width="34" height="30"/>
                                 <state key="normal" title="Save"/>
                                 <connections>
                                     <action selector="savePhone:" destination="Fyv-gP-KVL" eventType="touchUpInside" id="KYd-GI-P13"/>
@@ -60,24 +69,61 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="YkU-y1-til" firstAttribute="top" secondItem="c7C-mq-qgR" secondAttribute="bottom" constant="8" symbolic="YES" id="93Q-My-Rcb"/>
-                            <constraint firstItem="FjX-xC-d4g" firstAttribute="leading" secondItem="466-h4-G2d" secondAttribute="leadingMargin" id="NIn-8B-F4U"/>
-                            <constraint firstItem="n5w-LT-8dc" firstAttribute="trailing" secondItem="YkU-y1-til" secondAttribute="trailing" id="RcQ-NX-9XG"/>
+                            <constraint firstItem="YkU-y1-til" firstAttribute="trailing" secondItem="466-h4-G2d" secondAttribute="trailingMargin" id="1eL-xz-Qd7"/>
+                            <constraint firstItem="n5w-LT-8dc" firstAttribute="trailing" secondItem="YkU-y1-til" secondAttribute="trailing" id="2PC-FN-RE0"/>
+                            <constraint firstItem="FjX-xC-d4g" firstAttribute="leading" secondItem="mcF-7s-yYa" secondAttribute="leading" id="7cO-Ny-iOt"/>
+                            <constraint firstItem="YkU-y1-til" firstAttribute="top" secondItem="mcF-7s-yYa" secondAttribute="bottom" constant="8" symbolic="YES" id="BF4-up-bue"/>
+                            <constraint firstItem="YkU-y1-til" firstAttribute="leading" secondItem="FjX-xC-d4g" secondAttribute="trailing" constant="8" symbolic="YES" id="Bnt-ny-L4i"/>
+                            <constraint firstItem="n5w-LT-8dc" firstAttribute="trailing" secondItem="YkU-y1-til" secondAttribute="trailing" id="FE2-Hv-M22"/>
+                            <constraint firstItem="mcF-7s-yYa" firstAttribute="trailing" secondItem="466-h4-G2d" secondAttribute="trailingMargin" id="GqN-Ga-CQH"/>
+                            <constraint firstItem="YkU-y1-til" firstAttribute="trailing" secondItem="n5w-LT-8dc" secondAttribute="trailing" id="IeX-T3-SC2"/>
+                            <constraint firstItem="mcF-7s-yYa" firstAttribute="top" secondItem="c7C-mq-qgR" secondAttribute="bottom" constant="8" symbolic="YES" id="PzI-Lv-VbS"/>
+                            <constraint firstItem="FjX-xC-d4g" firstAttribute="centerY" secondItem="YkU-y1-til" secondAttribute="centerY" id="TQD-0M-bur"/>
+                            <constraint firstItem="YkU-y1-til" firstAttribute="trailing" secondItem="mcF-7s-yYa" secondAttribute="trailing" id="UhO-f5-CQk"/>
+                            <constraint firstItem="mcF-7s-yYa" firstAttribute="leading" secondItem="466-h4-G2d" secondAttribute="leadingMargin" id="VP8-qs-CAg"/>
                             <constraint firstItem="FjX-xC-d4g" firstAttribute="top" secondItem="c7C-mq-qgR" secondAttribute="bottom" constant="3" id="Va4-rW-7kM"/>
-                            <constraint firstItem="n5w-LT-8dc" firstAttribute="top" secondItem="YkU-y1-til" secondAttribute="bottom" constant="8" symbolic="YES" id="Z0H-1r-aF7"/>
-                            <constraint firstItem="FjX-xC-d4g" firstAttribute="centerY" secondItem="YkU-y1-til" secondAttribute="centerY" id="bRB-8s-zcF"/>
-                            <constraint firstItem="YkU-y1-til" firstAttribute="trailing" secondItem="466-h4-G2d" secondAttribute="trailingMargin" id="lde-wL-Wzg"/>
-                            <constraint firstItem="YkU-y1-til" firstAttribute="leading" secondItem="FjX-xC-d4g" secondAttribute="trailing" constant="8" symbolic="YES" id="sWS-73-g8l"/>
+                            <constraint firstItem="FjX-xC-d4g" firstAttribute="leading" secondItem="mcF-7s-yYa" secondAttribute="leading" id="XSt-l9-7di"/>
+                            <constraint firstItem="FjX-xC-d4g" firstAttribute="centerY" secondItem="YkU-y1-til" secondAttribute="centerY" id="ZRg-2i-OvO"/>
+                            <constraint firstItem="YkU-y1-til" firstAttribute="top" secondItem="mcF-7s-yYa" secondAttribute="bottom" constant="8" symbolic="YES" id="dbh-Jt-brU"/>
+                            <constraint firstItem="mcF-7s-yYa" firstAttribute="top" secondItem="c7C-mq-qgR" secondAttribute="bottom" constant="8" symbolic="YES" id="fbm-1R-Pny"/>
+                            <constraint firstItem="n5w-LT-8dc" firstAttribute="top" secondItem="YkU-y1-til" secondAttribute="bottom" constant="8" symbolic="YES" id="h99-3r-cKD"/>
+                            <constraint firstItem="mcF-7s-yYa" firstAttribute="trailing" secondItem="YkU-y1-til" secondAttribute="trailing" id="j9r-mD-ua8"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="FjX-xC-d4g" secondAttribute="leading" id="kSv-41-DKU"/>
+                            <constraint firstItem="mcF-7s-yYa" firstAttribute="leading" secondItem="FjX-xC-d4g" secondAttribute="leading" id="oMe-4v-r0U"/>
+                            <constraint firstItem="YkU-y1-til" firstAttribute="trailing" secondItem="466-h4-G2d" secondAttribute="trailingMargin" id="ojc-LJ-5yq"/>
+                            <constraint firstItem="YkU-y1-til" firstAttribute="top" secondItem="mcF-7s-yYa" secondAttribute="bottom" constant="35" id="p9A-S7-qOs"/>
+                            <constraint firstItem="FjX-xC-d4g" firstAttribute="top" secondItem="mcF-7s-yYa" secondAttribute="bottom" constant="8" symbolic="YES" id="ru9-aQ-7k2"/>
+                            <constraint firstItem="n5w-LT-8dc" firstAttribute="top" secondItem="YkU-y1-til" secondAttribute="bottom" constant="8" symbolic="YES" id="uc7-5u-z9L"/>
+                            <constraint firstItem="FjX-xC-d4g" firstAttribute="top" secondItem="mcF-7s-yYa" secondAttribute="bottom" constant="17" id="wBk-iu-OPQ"/>
+                            <constraint firstItem="YkU-y1-til" firstAttribute="leading" secondItem="FjX-xC-d4g" secondAttribute="trailing" constant="8" symbolic="YES" id="yzg-PQ-IcV"/>
+                            <constraint firstItem="n5w-LT-8dc" firstAttribute="top" secondItem="YkU-y1-til" secondAttribute="bottom" constant="8" symbolic="YES" id="zpp-iL-cUG"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="fbm-1R-Pny"/>
+                                <exclude reference="j9r-mD-ua8"/>
+                                <exclude reference="oMe-4v-r0U"/>
+                                <exclude reference="7cO-Ny-iOt"/>
                                 <exclude reference="Va4-rW-7kM"/>
+                                <exclude reference="ZRg-2i-OvO"/>
+                                <exclude reference="ru9-aQ-7k2"/>
+                                <exclude reference="wBk-iu-OPQ"/>
+                                <exclude reference="IeX-T3-SC2"/>
+                                <exclude reference="UhO-f5-CQk"/>
+                                <exclude reference="dbh-Jt-brU"/>
+                                <exclude reference="ojc-LJ-5yq"/>
+                                <exclude reference="p9A-S7-qOs"/>
+                                <exclude reference="yzg-PQ-IcV"/>
+                                <exclude reference="2PC-FN-RE0"/>
+                                <exclude reference="h99-3r-cKD"/>
+                                <exclude reference="zpp-iL-cUG"/>
                             </mask>
                         </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" id="Wpx-Ox-a8o"/>
                     <connections>
                         <outlet property="phoneField" destination="YkU-y1-til" id="VKB-Lg-YhH"/>
+                        <outlet property="promptLabel" destination="mcF-7s-yYa" id="thQ-Lq-eib"/>
                         <outlet property="saveButton" destination="n5w-LT-8dc" id="b8Y-1t-Trp"/>
                     </connections>
                 </viewController>
