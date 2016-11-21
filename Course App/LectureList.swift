@@ -22,11 +22,10 @@ class LectureList {
         self.path = path
         self.courseID = courseID
         if let savedLectures = defaults.arrayForKey("\(self.courseID)"){
-            print("Load Saved lectures")
             for l in savedLectures {
                 let lecture = Lecture(id: l["id"] as! Int,
                                       name: l["description"] as! String,
-                                      video_url: l["video_url"] as! String)
+                                      transcript_url: l["transcript_url"] as! String)
                 lectures.append(lecture)
             }
         }
@@ -50,9 +49,16 @@ class LectureList {
                     print("Downloaded \(lectures.count) lectures")
                     self.lectures = Array()
                     for element in lectures {
-                        self.lectures.append(Lecture(id: element["id"] as! Int,
+                        let lecture = Lecture(id: element["id"] as! Int,
                             name: element["description"] as! String,
-                            video_url: element["video_url"] as! String))
+                            transcript_url: element["transcript_url"] as! String)
+                        self.lectures.append(lecture)
+                        if let videos = element["videos"] as? [[String: AnyObject]] {
+                            for videoData in videos {
+                               let video = Video(id: (videoData["id"] as! Int), lecture: (videoData["lecture"] as! Int), title: (videoData["title"] as! String), url: (videoData["url"] as! String))
+                                lecture.videos.append(video)
+                            }
+                        }
                     }
                     self.defaults.setObject( lectures, forKey: "\(self.courseID)")
                     self.defaults.synchronize()

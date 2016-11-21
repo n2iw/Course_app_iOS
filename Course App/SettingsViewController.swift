@@ -10,34 +10,46 @@ import UIKit
 
 class SettingsViewController: UIViewController, UITextFieldDelegate {
     
-    @IBOutlet weak var firstNameField: UITextField!
-    @IBOutlet weak var lastNameField: UITextField!
+    @IBOutlet weak var phoneField: UITextField!
     @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var promptLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        firstNameField.text = Settings.getFirstName()
-        lastNameField.text = Settings.getLastName()
+        phoneField.text = Settings.getPhone()
+        let userName = Settings.getUserName()
+        if userName != nil && userName != "" {
+            self.promptLabel.text = "Name: \(userName!)"
+            self.promptLabel.textColor = UIColor.blueColor()
+            self.phoneField.textColor = UIColor.blueColor()
+        }
 
         saveButton.enabled = false
     }
 
-    @IBAction func saveNames(sender: UIButton) {
-        if let first_name = firstNameField.text{
-            if first_name != Settings.getFirstName() {
-                Settings.setFirstName(first_name.capitalizedString)
-                firstNameField.text = first_name.capitalizedString
-            }
-        }
-        if let last_name = lastNameField.text {
-            if last_name != Settings.getLastName() {
-                Settings.setLastName(last_name.capitalizedString)
-                lastNameField.text = last_name.capitalizedString
+    @IBAction func savePhone(sender: UIButton) {
+        if let phone = phoneField.text{
+            if phone != Settings.getPhone() {
+                Settings.setPhone(phone,
+                    succeed: { userName in
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.promptLabel.text = "Name: \(userName)"
+                            self.promptLabel.textColor = UIColor.blueColor()
+                            self.phoneField.textColor = UIColor.blueColor()
+                        }
+                    },
+                    fail: {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.promptLabel.text = "Phone number not registered!"
+                            self.promptLabel.textColor = UIColor.redColor()
+                            self.phoneField.textColor = UIColor.redColor()
+                        }
+                })
             }
         }
         saveButton.enabled = false
-        firstNameField.resignFirstResponder()
-        lastNameField.resignFirstResponder()
+        phoneField.resignFirstResponder()
+//        self.tabBarController?.selectedIndex =  Settings.COURSES_TAB_INDEX
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -51,22 +63,12 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
         saveButton.enabled = false
-        if let f_name = firstNameField.text{
-            let first_name = f_name.stringByTrimmingCharactersInSet(
+        if let temp = phoneField.text{
+            let phone = temp.stringByTrimmingCharactersInSet(
                 NSCharacterSet.whitespaceAndNewlineCharacterSet()
-            ).capitalizedString
-            firstNameField.text = first_name
-            if first_name != Settings.getFirstName() {
-                saveButton.enabled = true
-            }
-        }
-        
-        if let l_name = lastNameField.text {
-            let last_name = l_name.stringByTrimmingCharactersInSet(
-                NSCharacterSet.whitespaceAndNewlineCharacterSet()
-            ).capitalizedString
-            lastNameField.text = last_name
-            if last_name != Settings.getLastName() {
+            )
+            phoneField.text = phone
+            if phone != Settings.getPhone() {
                 saveButton.enabled = true
             }
         }

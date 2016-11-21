@@ -9,164 +9,161 @@
 import UIKit
 import AVKit
 import AVFoundation
+import QuickLook
 
-class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
+class VideoViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, QLPreviewControllerDataSource {
     
-    var lecture: Lecture!
-    var localFileURL: NSURL!
-    var downloading: Bool = false
-    var session: NSURLSession?
-    var task: NSURLSessionDownloadTask?
-    var resumeData: NSData?
+    @IBOutlet weak var tableView: UITableView!
     
-    @IBOutlet weak var downloadVideoButton: UIButton!
-    @IBOutlet weak var playVideoButton: UIButton!
-    @IBOutlet weak var deleteVideoButton: UIButton!
-    @IBOutlet weak var progressBar: UIProgressView!
-    
+    var lecture: Lecture! {
+        didSet {
+            let urlString = Settings.apiServer  + lecture.transcript_url.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+            guard
+                let url = NSURL(string: urlString),
+                let fileExtention = url.pathExtension,
+                let fileName = url.lastPathComponent
+                else {
+                    print("Transcript url wrong: \(lecture.transcript_url)")
+                    return
+            }
+            
+            lecture.fileName = fileName
+            let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+            lecture.localFileURL = folder.URLByAppendingPathComponent("lecture_\(lecture.id).\(fileExtention)")
+            if fileExists(lecture.localFileURL) {
+                lecture.progress = 1.0
+            }
+            
+            lecture.remoteURL = NSURL(string: urlString)
+            
+            for video in lecture.videos {
+                let urlString = Settings.apiServer  + video.url.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                guard
+                    let url = NSURL(string: urlString),
+                    let fileExtention = url.pathExtension
+                    else {
+                        print("Video url wrong: \(video.url)")
+                        return
+                }
+                
+                let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+                video.localFileURL = folder.URLByAppendingPathComponent("video_\(video.id).\(fileExtention)")
+                if fileExists(video.localFileURL) {
+                    video.progress = 1.0
+                }
+                
+                video.remoteURL = NSURL(string: urlString)
+            }
+        }
+    }
+//    private var downloader: Downloader?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = lecture.name
-        progressBar.hidden = true
-        downloading = false
-        
-        let fileExtention = (NSURL(string: lecture.video_url)?.pathExtension!)!
-        let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-        localFileURL = folder.URLByAppendingPathComponent("\(lecture.id).\(fileExtention)")
-        
-        session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-                               delegate: self,
-                               delegateQueue: NSOperationQueue.mainQueue())
-        updateButtonStates()
     }
     
-    private func updateButtonStates() {
-        playVideoButton.enabled = videoExists()
-        deleteVideoButton.enabled = videoExists()
-        downloadVideoButton.enabled = !videoExists()
-    }
-    
-    private func videoExists() -> Bool {
-        return NSFileManager.defaultManager().fileExistsAtPath(localFileURL.path!)
-    }
-    
-    @IBAction func downloadVideo(sender: UIButton) {
-        if task == nil {
-            downloadVideoButton.setTitle("Cancel Download", forState: .Normal)
-            progressBar.hidden = false
-            downloadVideo()
-        } else {
-            downloadVideoButton.setTitle("Download Video", forState: .Normal)
-            cancelDownload()
+    // Table row selected
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        print("session: \(indexPath.section) row: \(indexPath.row) touched")
+        if indexPath.section == 0 {
+            selectPDF(tableView, indexPath: indexPath)
+        } else if indexPath.section == 1 {
+            selectVideo(tableView, indexPath: indexPath)
         }
     }
     
-    private func downloadVideo(){
-        if task != nil {
-            print("Lecture: already downloading, can't download again")
-            return
-        }
-        
-        //resume a download
-        if let data = resumeData {
-            print("resume download")
-            task = session?.downloadTaskWithResumeData(data)
-            task!.resume()
+    private func selectPDF(tableView: UITableView ,indexPath: NSIndexPath) {
+        if fileExists(lecture.localFileURL) {
+            let preview = QLPreviewController()
+            preview.dataSource = self
+            if let nvc = self.navigationController {
+                nvc.pushViewController(preview, animated: true)
+            } else {
+                self.presentViewController(preview, animated: true, completion: nil)
+            }
         } else {
-            //new download
-            print("new download")
-            let url = Settings.apiServer + lecture.video_url
-            print("Downloading file \(url) to \(localFileURL.lastPathComponent!)")
+            guard let rUrl = lecture.remoteURL,
+                let lUrl = lecture.localFileURL
+                else {
+                  return
+            }
+            let downloader = Downloader(remoteURL: rUrl, localURL: lUrl) { progress in
+                self.lecture.progress = progress
+                dispatch_async(dispatch_get_main_queue(), {
+//                    self.tableView.reloadData()
+                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+                })
+            }
+            if let cell = tableView.cellForRowAtIndexPath(indexPath) as? VideoTableViewCell {
+                cell.progressBar.progress = 0.0
+                cell.progressBar.hidden = false
+            }
             
-            task = session?.downloadTaskWithURL(NSURL(string: url)!)
-            task!.resume()
+            downloader.start()
         }
     }
     
+    func numberOfPreviewItemsInPreviewController(controller: QLPreviewController) -> Int {
+        return 1
+    }
     
-    private func cancelDownload() {
-        if let task = self.task {
-            print("Cancel download")
-            task.cancelByProducingResumeData() {
-                resumeData in
-                self.resumeData = resumeData
-                self.task = nil
-            }
+    func previewController(controller: QLPreviewController,
+                           previewItemAtIndex index: Int) -> QLPreviewItem {
+        if let url = lecture.localFileURL{
+            return url
+        } else {
+            return NSURL()
         }
     }
     
-    //download resume
-    func URLSession(session: NSURLSession,
-                    downloadTask: NSURLSessionDownloadTask,
-                    didResumeAtOffset fileOffset: Int64,
-                                      expectedTotalBytes: Int64) {
-        self.progressBar.setProgress(Float(fileOffset)/Float(expectedTotalBytes), animated: true)
+    private func fileExists(localFileURL: NSURL?) -> Bool {
+        guard let url = localFileURL
+        else {
+            return false
+        }
+        return NSFileManager.defaultManager().fileExistsAtPath(url.path!)
     }
     
-    //progress report
-    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        self.progressBar.setProgress(Float(totalBytesWritten)/Float(totalBytesExpectedToWrite), animated: true)
-    }
-    
-    //download finished
-    func URLSession(session: NSURLSession,
-                      downloadTask: NSURLSessionDownloadTask,
-                                   didFinishDownloadingToURL location: NSURL) {
-        do {
-            try NSFileManager.defaultManager().moveItemAtURL(location, toURL: self.localFileURL)
-        } catch {
-            print("Move file \(location.path!) failed")
+    private func selectVideo(tableView: UITableView, indexPath: NSIndexPath) {
+        let video = lecture.videos[indexPath.row]
+        guard
+            let file = video.localFileURL
+            else {
+                return
         }
         
-        self.task = nil
-        self.resumeData = nil
-        self.downloadVideoButton.setTitle("Download Video", forState: .Normal)
-        self.updateButtonStates()
-        self.progressBar.hidden = true
-        self.progressBar.setProgress(0.0, animated: false)
-        print("download succeed")
-    }
-    
-    //download failed
-    func URLSession(session: NSURLSession,
-                      task: NSURLSessionTask,
-                           didCompleteWithError error: NSError?) {
-        if error != nil {
-            print("download failed")
-            resumeData = error?.userInfo[NSURLSessionDownloadTaskResumeData] as? NSData
-        }
-        self.task = nil
-        self.downloadVideoButton.setTitle("Download Video", forState: .Normal)
-    }
-    
-    
-    @IBAction func playVideo(sender: UIButton) {
-            do {
-                try playVideo()
-            } catch AppError.InvalidResource(let name, let type) {
-                debugPrint("Could not find resource \(name).\(type)")
-            } catch {
-                debugPrint("Generic error")
+        if fileExists(file) {
+            _ = try? playVideo(file)
+        } else {
+            guard let rUrl = video.remoteURL,
+                let lUrl = video.localFileURL
+                else {
+                    return
             }
+            let downloader = Downloader(remoteURL: rUrl, localURL: lUrl) { progress in
+                video.progress = progress
+                dispatch_async(dispatch_get_main_queue(), { 
+//                    self.tableView.reloadData()
+                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+                })
+            }
+            if let cell = tableView.cellForRowAtIndexPath(indexPath) as? VideoTableViewCell {
+                cell.progressBar.progress = 0.0
+                cell.progressBar.hidden = false
+            }
+            downloader.start()
+        }
+ 
     }
     
-    private func playVideo() throws {
-        let player = AVPlayer(URL: localFileURL)
+    private func playVideo(url: NSURL) throws {
+        let player = AVPlayer(URL: url)
         let playerController = AVPlayerViewController()
         playerController.player = player
         self.presentViewController(playerController, animated: true) {
             player.play()
         }
-    }
-    
-    @IBAction func deleteVideo(sender: UIButton) {
-        do {
-            try NSFileManager.defaultManager().removeItemAtURL(localFileURL)
-        } catch {
-            print("Can't delete file at: \(localFileURL.path!)")
-        }
-        updateButtonStates()
     }
     
     
@@ -185,6 +182,49 @@ class VideoViewController: UIViewController, NSURLSessionDownloadDelegate {
         }
     }
     
+    //UITableViewDataSource
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 1
+        } else {
+            return self.lecture.videos.count
+        }
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("VideoCell", forIndexPath: indexPath)
+        if let videoCell = cell as? VideoTableViewCell {
+            var progress: Float = 0.0
+            if indexPath.section == 0 {
+                videoCell.titleLabel?.text = lecture.fileName
+                progress = lecture.progress
+            } else {
+                videoCell.titleLabel?.text = self.lecture.videos[indexPath.row].title
+                progress = lecture.videos[indexPath.row].progress
+            }
+            videoCell.progressBar.setProgress(progress, animated: false)
+            if progress == 0 {
+                videoCell.progressBar.hidden = true
+            } else {
+                videoCell.progressBar.hidden = false
+            }
+            return videoCell
+        }
+        return cell
+    }
+    
+    //UITableViewDelegate
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 56
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 56
+    }
 }
 
 enum AppError : ErrorType {

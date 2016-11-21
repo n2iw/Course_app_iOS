@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1A91FD051D36052E00D646FC"
-               BuildableName = "Course App.app"
-               BlueprintName = "Course App"
-               ReferencedContainer = "container:Course App.xcodeproj">
+               BuildableName = "Shaban.app"
+               BlueprintName = "Shaban"
+               ReferencedContainer = "container:Shaban.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A91FD051D36052E00D646FC"
-            BuildableName = "Course App.app"
-            BlueprintName = "Course App"
-            ReferencedContainer = "container:Course App.xcodeproj">
+            BuildableName = "Shaban.app"
+            BlueprintName = "Shaban"
+            ReferencedContainer = "container:Shaban.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A91FD051D36052E00D646FC"
-            BuildableName = "Course App.app"
-            BlueprintName = "Course App"
-            ReferencedContainer = "container:Course App.xcodeproj">
+            BuildableName = "Shaban.app"
+            BlueprintName = "Shaban"
+            ReferencedContainer = "container:Shaban.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -70,16 +70,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1A91FD051D36052E00D646FC"
-            BuildableName = "Course App.app"
-            BlueprintName = "Course App"
-            ReferencedContainer = "container:Course App.xcodeproj">
+            BuildableName = "Shaban.app"
+            BlueprintName = "Shaban"
+            ReferencedContainer = "container:Shaban.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

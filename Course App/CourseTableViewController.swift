@@ -14,17 +14,27 @@ class CourseTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let phone = Settings.getPhone()
+        where phone != ""
+        else {
+            self.tabBarController?.selectedIndex = Settings.SETTINGS_TAB_INDEX
+            return
+        }
+        
         self.courseList.getCourses() {
             dispatch_async(dispatch_get_main_queue()) {
                 self.tableView.reloadData()
             }
         }
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.courseList.updateCourses() {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {
