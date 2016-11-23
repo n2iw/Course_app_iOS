@@ -13,7 +13,6 @@
         <attribute name="id" attributeType="Integer 32" indexed="YES" syncable="YES"/>
         <attribute name="localFileUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="progress" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="remoteUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="serial_number" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="transcript_url" optional="YES" attributeType="String" syncable="YES"/>
@@ -34,7 +33,6 @@
         <attribute name="currentTime" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
         <attribute name="id" attributeType="Integer 32" indexed="YES" syncable="YES"/>
         <attribute name="localFileUrl" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="progress" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="remoteUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -43,8 +41,8 @@
     </entity>
     <elements>
         <element name="CDCourse" positionX="-486" positionY="54" width="128" height="118"/>
-        <element name="CDLecture" positionX="-272" positionY="27" width="128" height="28"/>
+        <element name="CDLecture" positionX="-272" positionY="27" width="128" height="210"/>
         <element name="CDMessage" positionX="-452" positionY="243" width="128" height="133"/>
-        <element name="CDVideo" positionX="-38" positionY="72" width="128" height="195"/>
+        <element name="CDVideo" positionX="-38" positionY="72" width="128" height="180"/>
     </elements>
 </model>
