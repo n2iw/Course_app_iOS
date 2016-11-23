@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import CoreData
 
-class CourseTableViewController: UITableViewController {
+class CourseTableViewController: CoreDataTableViewController {
     
-    private var courseList = CourseList(url: Settings.apiServer, path: Settings.coursePath)
+    private let context = ((UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext)!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,82 +22,42 @@ class CourseTableViewController: UITableViewController {
             return
         }
         
-        self.courseList.getCourses() {
-            dispatch_async(dispatch_get_main_queue()) {
-                self.tableView.reloadData()
-            }
+        let request = NSFetchRequest(entityName: "CDCourse")
+        request.sortDescriptors = [NSSortDescriptor(
+            key: "id",
+            ascending: true,
+            selector: nil
+            )]
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: context,
+            sectionNameKeyPath: nil,
+            cacheName: "MyCourseQueryCache"
+        )
+        context.performBlock() {
+            CDCourse.fetchCourses(self.context)
+            _ = try? self.context.save()
         }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.courseList.updateCourses() {
-            dispatch_async(dispatch_get_main_queue()) {
-                self.tableView.reloadData()
-            }
+        context.performBlock() {
+            CDCourse.fetchCourses(self.context)
+            _ = try? self.context.save()
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return self.courseList.courses.count
-    }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("CouresCell", forIndexPath: indexPath)
-        cell.textLabel?.text = (courseList.courses[indexPath.row].name)
-
-        // Configure the cell...
+        
+        cell.textLabel?.text = self.fetchedResultsController?.objectAtIndexPath(indexPath).name
 
         return cell
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
 
     // MARK: - Navigation
 
@@ -104,10 +65,8 @@ class CourseTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let lectureVC = segue.destinationViewController as? LectureTableViewController {
             let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)
-            lectureVC.course = courseList.courses[indexPath!.row]
+            lectureVC.course = fetchedResultsController!.objectAtIndexPath(indexPath!) as! CDCourse
         }
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
     }
 
 }
