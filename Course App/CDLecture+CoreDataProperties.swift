@@ -2,7 +2,7 @@
 //  CDLecture+CoreDataProperties.swift
 //  Shaban
 //
-//  Created by Ming Ying on 11/19/16.
+//  Created by Ming Ying on 11/21/16.
 //  Copyright © 2016 University at Albany. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -20,6 +20,10 @@ extension CDLecture {
     @NSManaged var serial_number: NSNumber?
     @NSManaged var transcript_url: String?
     @NSManaged var updatedAt: NSDate?
+    @NSManaged var localFileUrl: String?
+    @NSManaged var remoteUrl: String?
+    @NSManaged var fileName: String?
+    @NSManaged var progress: NSNumber?
     @NSManaged var course: CDCourse?
     @NSManaged var videos: NSSet?
 
