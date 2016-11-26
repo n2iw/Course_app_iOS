@@ -14,6 +14,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var promptLabel: UILabel!
     
+    //MARK: View Controller Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         phoneField.text = Settings.getPhone()
@@ -27,6 +29,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         saveButton.enabled = false
     }
 
+    // MARK: Actions
+    
     @IBAction func savePhone(sender: UIButton) {
         if let phone = phoneField.text{
             if phone != Settings.getPhone() {
@@ -49,8 +53,9 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         }
         saveButton.enabled = false
         phoneField.resignFirstResponder()
-//        self.tabBarController?.selectedIndex =  Settings.COURSES_TAB_INDEX
     }
+    
+    //MARK: TextFiel delegate
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()

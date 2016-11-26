@@ -26,6 +26,7 @@ public class Settings {
     static let USER_ID = "phone"
     static let SETTINGS_TAB_INDEX = 1 //tab index of settings tab
     static let COURSES_TAB_INDEX = 0 //tab index of courses tab
+    static let UPDATE_INTERVAL: Double = 30 // Minimal seconds interval for updating courses
     
     static private let defaults = NSUserDefaults.standardUserDefaults()
     

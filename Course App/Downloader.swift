@@ -107,11 +107,11 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
                 return
         }
         if error != nil {
-            print("download \(remoteURL) failed")
+            print("download \(remoteURL!) failed")
             resumeData = error?.userInfo[NSURLSessionDownloadTaskResumeData] as? NSData
            _ = try? NSFileManager.defaultManager().removeItemAtURL(localURL)
         } else {
-            print("download \(remoteURL) succeed")
+            print("download \(remoteURL!) succeed")
         }
         self.task = nil
     }

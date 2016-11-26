@@ -16,7 +16,9 @@ class CDCourse: NSManagedObject {
     private static var updatedAt: NSDate = NSDate(timeIntervalSince1970: 0)
 
     class func fetchCourses(context: NSManagedObjectContext) {
-        if updatedAt.timeIntervalSinceNow >= -5 { //update at most once every 5 seconds
+        let interval = abs(updatedAt.timeIntervalSinceNow)
+        if interval <= Settings.UPDATE_INTERVAL { //update at most once every x seconds
+            print("Downloaded courses \(interval) seconds ago, skip this time")
             return
         }
         
@@ -30,14 +32,30 @@ class CDCourse: NSManagedObject {
                 print("Downloaded \(courses.count) courses")
                 self.updatedAt = NSDate()
                 
-                for element in courses {
-                    upsertFromApiJSON(element, context: context)
+                context.performBlock() {
+                    self.truncate(context)
+                    
+                    for element in courses {
+                        upsertFromApiJSON(element, context: context, tryUpdate: false)
+                    }
+                    _ = try? context.save()
                 }
             }
         }
     }
     
-    class func upsertFromApiJSON(json: [String: AnyObject], context: NSManagedObjectContext) {
+    private class func truncate(context: NSManagedObjectContext) {
+        let request = NSFetchRequest(entityName: "CDCourse")
+        
+        if let courses = (try? context.executeFetchRequest(request)) as? [CDCourse] {
+            for course in courses {
+                context.deleteObject(course)
+            }
+            
+        }
+    }
+    
+    class func upsertFromApiJSON(json: [String: AnyObject], context: NSManagedObjectContext, tryUpdate: Bool) {
         
         guard
             let id = json["id"] as? Int,
@@ -48,13 +66,16 @@ class CDCourse: NSManagedObject {
                 return
         }
         
-        
-        var cs = getCourseById(id, context: context)
-        if cs == nil {
+        var cs: CDCourse? = nil
+        if tryUpdate {
+            cs = getCourseById(id, inContext: context) ??
+                NSEntityDescription.insertNewObjectForEntityForName("CDCourse", inManagedObjectContext: context) as? CDCourse
+        } else {
             cs = NSEntityDescription.insertNewObjectForEntityForName("CDCourse", inManagedObjectContext: context) as? CDCourse
         }
         
-        guard let course = cs
+        guard
+            let course = cs
             else {
                 return
         }
@@ -66,18 +87,26 @@ class CDCourse: NSManagedObject {
         
         if let lectures = json["lectures"] as? [[String: AnyObject]] {
             for lec in lectures {
-                if let cdLecture = CDLecture.upsertFromApiJSON(lec, context: context) {
+                if let cdLecture = CDLecture.upsertFromApiJSON(lec, inContext: context, tryUpdate: true) {
                     cdLecture.course = course
                 }
             }
         }
     }
     
-    class func getCourseById(id: Int, context: NSManagedObjectContext?) -> CDCourse? {
+    class func getCourseById(id: Int, inContext context: NSManagedObjectContext?) -> CDCourse? {
         let request = NSFetchRequest(entityName: "CDCourse")
         request.predicate = NSPredicate(format: " id = %@ ", argumentArray: [id])
         
         return (try? context?.executeFetchRequest(request))??.first as? CDCourse
     }
-
+    
+    class func getCourseByApiJSON(json: [String: AnyObject], inContext context: NSManagedObjectContext) -> CDCourse? {
+        guard
+            let id = json["id"] as? Int
+            else {
+                return nil
+        }
+        return getCourseById(id, inContext: context)
+    }
 }

@@ -16,9 +16,12 @@ class CDLecture: NSManagedObject {
     private static var updatedAt: NSDate = NSDate(timeIntervalSince1970: 0)
     
     class func fetchLectures(course: CDCourse, context: NSManagedObjectContext) {
-        if updatedAt.timeIntervalSinceNow >= -5 { //update at most once every 5 seconds
+        let interval = abs(updatedAt.timeIntervalSinceNow)
+        if interval <= Settings.UPDATE_INTERVAL { //update at most once every x seconds
+            print("Downloaded lectures \(interval) seconds ago, skip this time")
             return
         }
+        
         
         server.get(Settings.lecturePath) {success, data in
             if success {
@@ -29,20 +32,31 @@ class CDLecture: NSManagedObject {
                 
                 print("Downloaded \(lcts.count) lectures")
                 self.updatedAt = NSDate()
-                
-                for element in lcts {
-                    upsertFromApiJSON(element, context: context)
-                    //        if let lectures = json["lectures"] as? [[String: AnyObject]] {
-                    //            for lec in lectures {
-                    //                CDLecture.upsertFromApiJSON(lec, context: context)
-                    //            }
-                    //        }
+                context.performBlock() {
+                    self.truncate(inContext: context)
+                    
+                    for element in lcts {
+                        upsertFromApiJSON(element, inContext: context, tryUpdate: false)
+                    }
+                    _ = try? context.save()
                 }
             }
         }
     
     }
-    class func upsertFromApiJSON(json: [String: AnyObject], context: NSManagedObjectContext) -> CDLecture?{
+    
+    private class func truncate(inContext context: NSManagedObjectContext) {
+        let request = NSFetchRequest(entityName: "CDLecture")
+        
+        if let lectures = (try? context.executeFetchRequest(request)) as? [CDLecture] {
+            for lecture in lectures {
+                context.deleteObject(lecture)
+            }
+        }
+    }
+    
+
+    class func upsertFromApiJSON(json: [String: AnyObject], inContext context: NSManagedObjectContext, tryUpdate: Bool) -> CDLecture?{
         
         guard
             let id = json["id"] as? Int,
@@ -56,8 +70,11 @@ class CDLecture: NSManagedObject {
         }
         
         
-        var lec = getLectureById(id, context: context)
-        if lec == nil {
+        var lec: CDLecture? = nil
+        if tryUpdate {
+            lec = getLectureById(id, inContext: context) ??
+                    NSEntityDescription.insertNewObjectForEntityForName("CDLecture", inManagedObjectContext: context) as? CDLecture
+        } else {
             lec = NSEntityDescription.insertNewObjectForEntityForName("CDLecture", inManagedObjectContext: context) as? CDLecture
         }
         
@@ -72,17 +89,52 @@ class CDLecture: NSManagedObject {
         lecture.transcript_url = transcript_url
         lecture.createdAt = JSONDate.dateFromJSONString(createdAt)
         lecture.updatedAt = JSONDate.dateFromJSONString(updatedAt)
+        
+        let urlString = Settings.apiServer  + transcript_url
+        lecture.remoteUrl = urlString
+        
+        guard let url = NSURL(string: urlString)
+            else {
+                print("\(urlString) is not URL")
+                return nil
+        }
+        
+        let fileExtention = url.pathExtension
+        let fileName = url.lastPathComponent
+        
+        lecture.fileName = fileName
+        let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+        lecture.localFileUrl = folder.URLByAppendingPathComponent("lecture_\(lecture.id!).\(fileExtention!)").absoluteString
+        
+        if let course = json["course"] as? [String: AnyObject] {
+            lecture.course = CDCourse.getCourseByApiJSON(course, inContext: context)
+        }
+        
+        if let videos = json["videos"] as? [[String: AnyObject]] {
+//            CDVideo.deleteVideosForLecture(lecture, inContext: context)
+            for video in videos {
+                if let cdVideo = CDVideo.upsertFromApiJSON(video, inContext: context, tryUpdate: true) {
+                    cdVideo.lecture = lecture
+                }
+            }
+        }
 
         return lecture
     }
     
-    class func getLectureById(id: Int, context: NSManagedObjectContext?) -> CDLecture? {
+    class func getLectureById(id: Int, inContext context: NSManagedObjectContext?) -> CDLecture? {
         let request = NSFetchRequest(entityName: "CDLecture")
         request.predicate = NSPredicate(format: " id = %@ ", argumentArray: [id])
         
-        
        return (try? context?.executeFetchRequest(request))??.first as? CDLecture
     }
-
-
+    
+    class func getLectureByApiJSON(json: [String: AnyObject], inContext context: NSManagedObjectContext) -> CDLecture? {
+        guard
+            let id = json["id"] as? Int
+            else {
+                return nil
+        }
+        return getLectureById(id, inContext: context)
+    }
 }

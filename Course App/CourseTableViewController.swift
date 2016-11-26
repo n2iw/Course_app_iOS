@@ -13,15 +13,11 @@ class CourseTableViewController: CoreDataTableViewController {
     
     private let context = ((UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext)!
     
+    //MARK: ViewController Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let phone = Settings.getPhone()
-        where phone != ""
-        else {
-            self.tabBarController?.selectedIndex = Settings.SETTINGS_TAB_INDEX
-            return
-        }
-        
+
         let request = NSFetchRequest(entityName: "CDCourse")
         request.sortDescriptors = [NSSortDescriptor(
             key: "id",
@@ -32,29 +28,29 @@ class CourseTableViewController: CoreDataTableViewController {
             fetchRequest: request,
             managedObjectContext: context,
             sectionNameKeyPath: nil,
-            cacheName: "MyCourseQueryCache"
+            cacheName: nil
         )
-        context.performBlock() {
-            CDCourse.fetchCourses(self.context)
-            _ = try? self.context.save()
+        
+        guard let phone = Settings.getPhone()
+            where phone != ""
+            else {
+                self.tabBarController?.selectedIndex = Settings.SETTINGS_TAB_INDEX
+                return
         }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        context.performBlock() {
-            CDCourse.fetchCourses(self.context)
-            _ = try? self.context.save()
-        }
+        CDCourse.fetchCourses(self.context)
     }
     
     // MARK: - Table view data source
 
-
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("CouresCell", forIndexPath: indexPath)
-        
-        cell.textLabel?.text = self.fetchedResultsController?.objectAtIndexPath(indexPath).name
+        if let course = self.fetchedResultsController?.objectAtIndexPath(indexPath) as? CDCourse {
+            cell.textLabel?.text = course.name
+        }
 
         return cell
     }

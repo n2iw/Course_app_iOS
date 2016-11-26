@@ -8,56 +8,67 @@
 
 import UIKit
 import SocketIOClientSwift
+import CoreData
 
-class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
-    let messageAttribute = [ NSForegroundColorAttributeName: UIColor.blueColor() ]
-    let authorAttribute = [NSForegroundColorAttributeName: UIColor.grayColor()]
+class ChatViewController: CDTableViewInViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     let TAB_BAR_HEIGHT = 49
-
-    @IBOutlet weak var messageTableView: UITableView!
-    @IBOutlet weak var textField: UITextField!
-    lazy private var messageList: MessageList = self.newMessageList()
     
-    var lecture: Lecture! {
+    private let context = ((UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext)!
+    
+    @IBOutlet weak var messageTableView: UITableView! {
         didSet {
-            self.messageList = newMessageList()
-            self.messageList.fetchMessages() {
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.messageTableView.reloadData()
-                    if self.messageList.messages.count != 0 {
-                        let index = self.messageList.messages.count - 1
-                        let indexPath = NSIndexPath(forRow: index ,  inSection: 0)
-                        self.messageTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
-                    }
-                }
-            }
+            self.tableView = messageTableView
         }
     }
-    private let context = (UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext
+    
+    @IBOutlet weak var textField: UITextField!
+    
+    var lecture: CDLecture! {
+        didSet {
+            guard let lecture = self.lecture
+                else {
+                    return
+            }
+            
+            self.navigationItem.title = lecture.name
+
+            let request = NSFetchRequest(entityName: "CDMessage")
+            request.sortDescriptors = [NSSortDescriptor(
+                key: "id",
+                ascending: true,
+                selector: nil
+                )]
+            request.predicate = NSPredicate(format: "group == %@", lecture.id!)
+            fetchedResultsController = NSFetchedResultsController(
+                fetchRequest: request,
+                managedObjectContext: context,
+                sectionNameKeyPath: nil,
+                cacheName: nil
+            )
+            CDMessage.fetchMessagesForGroupId(self.lecture.id as! Int, inContext: self.context, callback: nil)
+        }
+    }
     
     private var socket = SocketIOClient(socketURL: NSURL(string: Settings.socketServer)!, options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])])
-    private var count = 0
+    
+    // MARK: ViewController Lift cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = self.lecture.name
+        self.navigationItem.title = "Chatting: \(self.lecture.name!)"
 
         socket.on("connect") {data, ack in
             print("socket connected")
-            self.socket.emit("post", ["url": "/groups/join/\(self.lecture.id)"])
+            let url = "/groups/join/\(self.lecture.id!)"
+            self.socket.emit("post", ["url": url])
         }
         
-        socket.on("message") {[weak weakSelf = self] data, ack in
-            if let msg = CDMessage.objectFromSocketJSON(data[0], inContext: self.context) {
-                dispatch_async(dispatch_get_main_queue()) {
-                    weakSelf?.messageList.messages.append(msg)
-                    let index = weakSelf!.messageList.messages.count - 1
-                    let indexPath = NSIndexPath(forRow: index ,  inSection: 0)
-                    weakSelf?.messageTableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
-                    weakSelf?.messageTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
+        socket.on("message") { data, ack in
+            self.context.performBlock() {
+                for msg in data {
+                    _ = CDMessage.messageFromSocketJSON(msg, inContext: self.context)
                 }
-            } else {
-                print("Got message: wrong format!")
+                _ = try? self.context.save()
             }
         }
         
@@ -67,43 +78,24 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
-        
-        print("Current tabeIndex: \(self.tabBarController?.selectedIndex)")
-        
     }
     
-    private func newMessageList() -> MessageList {
-        return MessageList(id: lecture.id, url: Settings.apiServer, path: Settings.messagePath, context: context!)
-        
-    }
-
-
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        view.endEditing(true)
-    }
-    
-    @IBAction func send(sender: UIButton) {
-        guard let text = textField.text where text != "",
-        let phone = Settings.getPhone() where phone != "",
-        let userName = Settings.getUserName() where userName != ""
-        else {
-            let alert = UIAlertController(title: "Couldn't send message", message: "Please enter your registered phone number in \"Settings\" tab!", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
-            self.tabBarController?.selectedIndex = Settings.SETTINGS_TAB_INDEX
-            return
+    override func viewWillAppear(animated: Bool) {
+        guard let sections = fetchedResultsController?.sections,
+            let row = sections.first?.numberOfObjects
+            where row > 0
+            else {
+                return
         }
         
-        socket.emit("post", [
-            "url": "/messages",
-            "data": [
-                "group": self.lecture.id,
-                "author": phone,
-                "content": text
-            ]
-            ])
-        textField.text = ""
-        textField.resignFirstResponder()
+        let indexPath = NSIndexPath(forRow: row - 1, inSection: 0)
+        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
+    }
+    
+    // MARK: UITextFieldDelegate
+    
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        view.endEditing(true)
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -126,24 +118,56 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         return true
     }
     
-    //UITableViewDelegate
-    
-    //UITableViewDataSource
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
+    // MARK: Actions
+    @IBAction func send(sender: UIButton) {
+        guard let text = textField.text where text != "",
+            let phone = Settings.getPhone() where phone != "",
+            let userName = Settings.getUserName() where userName != ""
+            else {
+                let alert = UIAlertController(title: "Couldn't send message", message: "Please enter your registered phone number in \"Settings\" tab!", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+                self.tabBarController?.selectedIndex = Settings.SETTINGS_TAB_INDEX
+                return
+        }
+        
+        socket.emit("post", [
+            "url": "/messages",
+            "data": [
+                "group": self.lecture.id as! Int,
+                "author": phone,
+                "content": text
+            ]
+            ])
+        textField.text = ""
+        textField.resignFirstResponder()
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return self.messageList.messages.count
-    }
+    
+    // MARK: UITableViewDataSource
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Message", forIndexPath: indexPath)
-        cell.textLabel?.text = messageList.messages[indexPath.row].author! + ":"
-        cell.detailTextLabel?.text = messageList.messages[indexPath.row].content
+        if let message = fetchedResultsController?.objectAtIndexPath(indexPath) as? CDMessage {
+            cell.textLabel?.text = message.author! + ":"
+            cell.detailTextLabel?.text = message.content
+        }
         
         return cell
+    }
+    
+    // MARK: NSFetchedResultsControllerDelegate
+    override func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        tableView.endUpdates()
+        
+        guard let sections = fetchedResultsController?.sections,
+            let row = sections.first?.numberOfObjects
+            where row > 0
+            else {
+                return
+        }
+        
+        let indexPath = NSIndexPath(forRow: row - 1, inSection: 0)
+        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
     }
 }

@@ -11,10 +11,16 @@ import CoreData
 
 class LectureTableViewController: CoreDataTableViewController {
     
-   private let context = ((UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext)!
+    private let context = ((UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext)!
     
     var course: CDCourse! {
         didSet {
+            guard let course = self.course
+                else {
+                    return
+            }
+            
+            self.navigationItem.title = course.name
             let request = NSFetchRequest(entityName: "CDLecture")
             request.sortDescriptors = [NSSortDescriptor(
                 key: "serial_number",
@@ -26,18 +32,16 @@ class LectureTableViewController: CoreDataTableViewController {
                 fetchRequest: request,
                 managedObjectContext: context,
                 sectionNameKeyPath: nil,
-                cacheName: "MyLectureQueryCache"
+                cacheName: nil
             )
-            context.performBlock() {
-                CDLecture.fetchLectures(self.course, context: self.context)
-                _ = try? self.context.save()
-            }
+            CDLecture.fetchLectures(self.course, context: self.context)
         }
     }
     
+    //MARK: ViewController Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = course.name
     }
 
     override func didReceiveMemoryWarning() {
@@ -46,10 +50,11 @@ class LectureTableViewController: CoreDataTableViewController {
 
     // MARK: - Table view data source
 
-
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("lectureCell", forIndexPath: indexPath)
-        cell.textLabel?.text = self.fetchedResultsController?.objectAtIndexPath(indexPath).name
+        if let lecture = self.fetchedResultsController?.objectAtIndexPath(indexPath) as? CDLecture {
+            cell.textLabel?.text = lecture.name
+        }
 
         return cell
     }
