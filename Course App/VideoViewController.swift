@@ -10,71 +10,78 @@ import UIKit
 import AVKit
 import AVFoundation
 import QuickLook
+import CoreData
 
-class VideoViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, QLPreviewControllerDataSource {
+class VideoViewController: CDTableViewInViewController, UITableViewDataSource, UITableViewDelegate, QLPreviewControllerDataSource {
+    private let context = ((UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext)!
     
-    @IBOutlet weak var tableView: UITableView!
-    
-    var lecture: Lecture! {
+    @IBOutlet weak var weakTableView: UITableView! {
         didSet {
-            let urlString = Settings.apiServer  + lecture.transcript_url.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-            guard
-                let url = NSURL(string: urlString),
-                let fileExtention = url.pathExtension,
-                let fileName = url.lastPathComponent
+            self.tableView = weakTableView
+        }
+    }
+    
+    var lecture: CDLecture! {
+        didSet {
+            guard let lecture = self.lecture
                 else {
-                    print("Transcript url wrong: \(lecture.transcript_url)")
                     return
             }
             
-            lecture.fileName = fileName
-            let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-            lecture.localFileURL = folder.URLByAppendingPathComponent("lecture_\(lecture.id).\(fileExtention)")
-            if fileExists(lecture.localFileURL) {
-                lecture.progress = 1.0
-            }
+            self.navigationItem.title = lecture.name
+            let request = NSFetchRequest(entityName: "CDVideo")
+            request.sortDescriptors = [NSSortDescriptor(
+                key: "id",
+                ascending: true,
+                selector: nil
+                )]
+            request.predicate = NSPredicate(format: "lecture == %@", lecture)
+            fetchedResultsController = NSFetchedResultsController(
+                fetchRequest: request,
+                managedObjectContext: context,
+                sectionNameKeyPath: nil,
+                cacheName: nil
+            )
             
-            lecture.remoteURL = NSURL(string: urlString)
-            
-            for video in lecture.videos {
-                let urlString = Settings.apiServer  + video.url.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-                guard
-                    let url = NSURL(string: urlString),
-                    let fileExtention = url.pathExtension
-                    else {
-                        print("Video url wrong: \(video.url)")
-                        return
-                }
-                
-                let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-                video.localFileURL = folder.URLByAppendingPathComponent("video_\(video.id).\(fileExtention)")
-                if fileExists(video.localFileURL) {
-                    video.progress = 1.0
-                }
-                
-                video.remoteURL = NSURL(string: urlString)
+            if fileExists(lecture.localFileUrl!) {
+                let indexPath = NSIndexPath(forRow: 0, inSection: 1)
+                progresses[indexPath] = 1.0
             }
         }
+
     }
-//    private var downloader: Downloader?
+    
+    private var progresses = Dictionary<NSIndexPath, Float>()
+    
+    // MARK: ViewController Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = lecture.name
     }
     
-    // Table row selected
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    
+    // MARK: Actions
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("session: \(indexPath.section) row: \(indexPath.row) touched")
-        if indexPath.section == 0 {
+        if indexPath.section == 1 {
             selectPDF(tableView, indexPath: indexPath)
-        } else if indexPath.section == 1 {
+        } else if indexPath.section == 0 {
             selectVideo(tableView, indexPath: indexPath)
         }
     }
     
     private func selectPDF(tableView: UITableView ,indexPath: NSIndexPath) {
-        if fileExists(lecture.localFileURL) {
+        guard let localFileURL = lecture.localFileUrl
+            else {
+                return
+        }
+        
+        if fileExists(localFileURL) {
             let preview = QLPreviewController()
             preview.dataSource = self
             if let nvc = self.navigationController {
@@ -83,15 +90,14 @@ class VideoViewController: UIViewController, UITableViewDataSource, UITableViewD
                 self.presentViewController(preview, animated: true, completion: nil)
             }
         } else {
-            guard let rUrl = lecture.remoteURL,
-                let lUrl = lecture.localFileURL
+            guard let rUrl = lecture.remoteUrl,
+                let lUrl = lecture.localFileUrl
                 else {
                   return
             }
             let downloader = Downloader(remoteURL: rUrl, localURL: lUrl) { progress in
-                self.lecture.progress = progress
+                self.progresses[indexPath] = progress
                 dispatch_async(dispatch_get_main_queue(), {
-//                    self.tableView.reloadData()
                     self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
                 })
             }
@@ -104,47 +110,25 @@ class VideoViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-    func numberOfPreviewItemsInPreviewController(controller: QLPreviewController) -> Int {
-        return 1
-    }
-    
-    func previewController(controller: QLPreviewController,
-                           previewItemAtIndex index: Int) -> QLPreviewItem {
-        if let url = lecture.localFileURL{
-            return url
-        } else {
-            return NSURL()
-        }
-    }
-    
-    private func fileExists(localFileURL: NSURL?) -> Bool {
-        guard let url = localFileURL
-        else {
-            return false
-        }
-        return NSFileManager.defaultManager().fileExistsAtPath(url.path!)
-    }
-    
     private func selectVideo(tableView: UITableView, indexPath: NSIndexPath) {
-        let video = lecture.videos[indexPath.row]
         guard
-            let file = video.localFileURL
+            let video = fetchedResultsController?.objectAtIndexPath(indexPath) as? CDVideo,
+            let file = video.localFileUrl
             else {
                 return
         }
         
         if fileExists(file) {
-            _ = try? playVideo(file)
+            _ = try? playVideo(video)
         } else {
-            guard let rUrl = video.remoteURL,
-                let lUrl = video.localFileURL
+            guard let rUrl = video.remoteUrl,
+                let lUrl = video.localFileUrl
                 else {
                     return
             }
             let downloader = Downloader(remoteURL: rUrl, localURL: lUrl) { progress in
-                video.progress = progress
+                self.progresses[indexPath] = progress
                 dispatch_async(dispatch_get_main_queue(), { 
-//                    self.tableView.reloadData()
                     self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
                 })
             }
@@ -157,67 +141,116 @@ class VideoViewController: UIViewController, UITableViewDataSource, UITableViewD
  
     }
     
-    private func playVideo(url: NSURL) throws {
+    private func playVideo(video: CDVideo) throws {
+        guard let url = NSURL(string: video.localFileUrl!)
+            else {
+                return
+        }
         let player = AVPlayer(URL: url)
         let playerController = AVPlayerViewController()
         playerController.player = player
+        player.addPeriodicTimeObserverForInterval(CMTimeMakeWithSeconds(5, 1), queue: nil) { (currentTime) in
+            let seconds = CMTimeGetSeconds(player.currentTime())
+            self.context.performBlock() {
+                video.currentTime = seconds
+                _ = try? self.context.save()
+            }
+        }
+        
+        if let currentTime = video.currentTime as? Double {
+            let cmtime = CMTime(seconds: currentTime, preferredTimescale: 1)
+            player.seekToTime(cmtime)
+        }
+        
         self.presentViewController(playerController, animated: true) {
             player.play()
         }
     }
     
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    private func fileExists(localFileURL: String) -> Bool {
+        guard let url = NSURL(string: localFileURL)
+            else {
+                return false
+        }
+        return NSFileManager.defaultManager().fileExistsAtPath(url.path!)
     }
     
-
+    // MARK: QLPreviewControllerDataSource
+    
+    func numberOfPreviewItemsInPreviewController(controller: QLPreviewController) -> Int {
+        return 1
+    }
+    
+    func previewController(controller: QLPreviewController,
+                           previewItemAtIndex index: Int) -> QLPreviewItem {
+        guard let urlString = lecture?.localFileUrl,
+        let url = NSURL(string: urlString)
+        else {
+            return NSURL()
+        }
+        
+        return url
+    }
+    
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let chatVC = segue.destinationViewController as? ChatViewController {
             chatVC.lecture = self.lecture
         }
     }
     
-    //UITableViewDataSource
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    // MARK: UITableViewDataSource
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 1
+            return super.tableView(tableView, numberOfRowsInSection: section)
         } else {
-            return self.lecture.videos.count
+            return 1
         }
+    }
+    
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 1 {
+            return "Trancsripts"
+        } else if section == 0 {
+            return "Videos"
+        }
+        return nil
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("VideoCell", forIndexPath: indexPath)
         if let videoCell = cell as? VideoTableViewCell {
-            var progress: Float = 0.0
             if indexPath.section == 0 {
+                if let video = self.fetchedResultsController?.objectAtIndexPath(indexPath) as? CDVideo {
+                    videoCell.titleLabel?.text = video.title
+                    if let localFileUrl = video.localFileUrl {
+                        if fileExists(localFileUrl) {
+                            progresses[indexPath] = 1.0
+                        }
+                    }
+                }
+            } else {
                 videoCell.titleLabel?.text = lecture.fileName
-                progress = lecture.progress
-            } else {
-                videoCell.titleLabel?.text = self.lecture.videos[indexPath.row].title
-                progress = lecture.videos[indexPath.row].progress
             }
+            
+            let progress = progresses[indexPath] ?? 0
             videoCell.progressBar.setProgress(progress, animated: false)
-            if progress == 0 {
-                videoCell.progressBar.hidden = true
-            } else {
-                videoCell.progressBar.hidden = false
-            }
+            
+            videoCell.progressBar.hidden = (progress == 0)
+            
             return videoCell
+        } else {
+            return cell
         }
-        return cell
     }
     
-    //UITableViewDelegate
+    //MARK: UITableViewDelegate
     func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 56
     }
@@ -225,8 +258,4 @@ class VideoViewController: UIViewController, UITableViewDataSource, UITableViewD
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 56
     }
-}
-
-enum AppError : ErrorType {
-    case InvalidResource(String, String)
 }

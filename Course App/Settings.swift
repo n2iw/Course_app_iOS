@@ -11,8 +11,8 @@ import Foundation
 public class Settings {
 //    static let apiServer = "http://104.236.56.153:1337" //Ocean2
 //    static let apiServer = "http://192.168.10.10:1337" //local vagrant
-    static let apiServer = "http://localhost:1337" //localhost
-//    static let apiServer = "https://shaban.rit.albany.edu" //production
+//    static let apiServer = "http://localhost:1337" //localhost
+    static let apiServer = "https://shaban.rit.albany.edu" //production
 //    static let apiServer = "https://shaban-test.rit.albany.edu" //testing
 //    static let apiServer = "https://shaban-stage.rit.albany.edu" //staging
     
@@ -26,6 +26,7 @@ public class Settings {
     static let USER_ID = "phone"
     static let SETTINGS_TAB_INDEX = 1 //tab index of settings tab
     static let COURSES_TAB_INDEX = 0 //tab index of courses tab
+    static let UPDATE_INTERVAL: Double = 30 // Minimal seconds interval for updating courses
     
     static private let defaults = NSUserDefaults.standardUserDefaults()
     

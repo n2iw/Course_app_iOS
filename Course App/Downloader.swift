@@ -10,20 +10,25 @@ import Foundation
 
 class Downloader: NSObject, NSURLSessionDownloadDelegate  {
     private var progressCB: ((Float) -> Void)?
-    private var remoteURL: NSURL
-    private var localURL: NSURL
+    private var remoteURL: NSURL?
+    private var localURL: NSURL?
     
     private var session: NSURLSession?
     private var task: NSURLSessionDownloadTask?
     private var resumeData: NSData?
     
-    init(remoteURL: NSURL, localURL: NSURL, progressCB: ((Float) -> Void )?) {
-        self.remoteURL = remoteURL
-        self.localURL = localURL
+    init(remoteURL: String, localURL: String, progressCB: ((Float) -> Void )?) {
+        self.remoteURL = NSURL(string:  remoteURL)
+        self.localURL = NSURL(string: localURL)
         self.progressCB = progressCB
     }
     
     func start() {
+        guard let remoteURL = self.remoteURL,
+        let localURL = self.localURL
+            else {
+                return
+        }
         
         if task != nil {
             print("Downloader: already downloading, can't download again")
@@ -79,8 +84,12 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
     @objc func URLSession(session: NSURLSession,
                       downloadTask: NSURLSessionDownloadTask,
                                    didFinishDownloadingToURL location: NSURL) {
+        guard let localURL = self.localURL
+            else {
+                return
+        }
         do {
-            try NSFileManager.defaultManager().moveItemAtURL(location, toURL: self.localURL)
+            try NSFileManager.defaultManager().moveItemAtURL(location, toURL: localURL)
         } catch {
             print("Move file \(location.path!) failed")
         }
@@ -89,16 +98,20 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
         self.resumeData = nil
     }
     
-    //download failed
+    //download finished
     func URLSession(session: NSURLSession,
                       task: NSURLSessionTask,
                            didCompleteWithError error: NSError?) {
+        guard let localURL = self.localURL
+            else {
+                return
+        }
         if error != nil {
-            print("download \(remoteURL) failed")
+            print("download \(remoteURL!) failed")
             resumeData = error?.userInfo[NSURLSessionDownloadTaskResumeData] as? NSData
-           _ = try? NSFileManager.defaultManager().removeItemAtURL(self.localURL)
+           _ = try? NSFileManager.defaultManager().removeItemAtURL(localURL)
         } else {
-            print("download \(remoteURL) succeed")
+            print("download \(remoteURL!) succeed")
         }
         self.task = nil
     }
