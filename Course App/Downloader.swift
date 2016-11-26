@@ -98,7 +98,7 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
         self.resumeData = nil
     }
     
-    //download failed
+    //download finished
     func URLSession(session: NSURLSession,
                       task: NSURLSessionTask,
                            didCompleteWithError error: NSError?) {
