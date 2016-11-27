@@ -25,10 +25,13 @@ class VideoViewController: CDTableViewInViewController, UITableViewDataSource, U
         didSet {
             guard let lecture = self.lecture
                 else {
+                    fetchedResultsController = nil
                     return
             }
             
+            self.title = lecture.name
             self.navigationItem.title = lecture.name
+            
             let request = NSFetchRequest(entityName: "CDVideo")
             request.sortDescriptors = [NSSortDescriptor(
                 key: "id",
@@ -57,7 +60,7 @@ class VideoViewController: CDTableViewInViewController, UITableViewDataSource, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = lecture.name
+        self.title = self.lecture.name
     }
     
     override func didReceiveMemoryWarning() {
