@@ -47,10 +47,40 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
                                        delegate: self,
                                        delegateQueue: NSOperationQueue.mainQueue())
             }
-            print("new download")
-            print("Downloading file \(remoteURL) to \(localURL.lastPathComponent!)")
             
-            task = session?.downloadTaskWithURL(remoteURL)
+            task = session?.downloadTaskWithURL(remoteURL){
+                location, res, error in
+                if error != nil {
+                    print("download \(self.remoteURL!) failed")
+                    self.resumeData = error?.userInfo[NSURLSessionDownloadTaskResumeData] as? NSData
+                   _ = try? NSFileManager.defaultManager().removeItemAtURL(localURL)
+                }
+                
+                if let httpRes = res as? NSHTTPURLResponse {
+                    if httpRes.statusCode != 200 {
+                        print("download \(self.remoteURL!) failed")
+                        self.task = nil
+                    } else {
+                        print("download \(self.remoteURL!) succeed")
+                        self.progressCB?(1.0)
+                        guard let localURL = self.localURL
+                            else {
+                                self.task = nil
+                                return
+                        }
+                        do {
+                            try NSFileManager.defaultManager().moveItemAtURL(location!, toURL: localURL)
+                        } catch {
+                            print("Move file \(location!.path!) failed")
+                        }
+                        
+                        self.task = nil
+                        self.resumeData = nil
+                        self.progressCB?(1.0)
+                    }
+                }
+                
+            }
             task!.resume()
         }
     }
@@ -84,24 +114,28 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
     @objc func URLSession(session: NSURLSession,
                       downloadTask: NSURLSessionDownloadTask,
                                    didFinishDownloadingToURL location: NSURL) {
-        guard let localURL = self.localURL
-            else {
-                return
-        }
-        do {
-            try NSFileManager.defaultManager().moveItemAtURL(location, toURL: localURL)
-        } catch {
-            print("Move file \(location.path!) failed")
-        }
-        
-        self.task = nil
-        self.resumeData = nil
+        print("URLSession downloadTask didFinishDownloadingToURL")
+//        guard let localURL = self.localURL
+//            else {
+//                return
+//        }
+//        do {
+//            try NSFileManager.defaultManager().moveItemAtURL(location, toURL: localURL)
+//        } catch {
+//            print("Move file \(location.path!) failed")
+//        }
+//        
+//        self.task = nil
+//        self.resumeData = nil
+//        self.progressCB?(1.0)
     }
     
     //download finished
     func URLSession(session: NSURLSession,
                       task: NSURLSessionTask,
                            didCompleteWithError error: NSError?) {
+        print(session)
+        print(task)
         guard let localURL = self.localURL
             else {
                 return
@@ -112,8 +146,8 @@ class Downloader: NSObject, NSURLSessionDownloadDelegate  {
            _ = try? NSFileManager.defaultManager().removeItemAtURL(localURL)
         } else {
             print("download \(remoteURL!) succeed")
+        self.progressCB?(1.0)
         }
         self.task = nil
     }
-    
 }
