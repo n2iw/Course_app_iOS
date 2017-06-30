@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="SVX-dJ-Fci">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1421" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="SVX-dJ-Fci">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -120,7 +120,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Settings" id="Wpx-Ox-a8o"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="912-gears" id="Wpx-Ox-a8o"/>
                     <connections>
                         <outlet property="phoneField" destination="YkU-y1-til" id="VKB-Lg-YhH"/>
                         <outlet property="promptLabel" destination="mcF-7s-yYa" id="thQ-Lq-eib"/>
@@ -462,7 +462,7 @@
         <scene sceneID="Edp-cJ-4HU">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="DtS-ci-WBS" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Courses" id="A3u-KY-FuB"/>
+                    <tabBarItem key="tabBarItem" title="Courses" image="961-book-32" id="A3u-KY-FuB"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="qcp-La-5xo">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -478,6 +478,10 @@
             <point key="canvasLocation" x="1145" y="361"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="912-gears" width="28" height="28"/>
+        <image name="961-book-32" width="20" height="28"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="I0P-MK-m3e"/>
     </inferredMetricsTieBreakers>
