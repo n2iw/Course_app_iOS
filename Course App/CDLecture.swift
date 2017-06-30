@@ -100,9 +100,10 @@ class CDLecture: NSManagedObject {
         }
         
         let fileExtention = url.pathExtension
-        let fileName = url.lastPathComponent
+//        let fileName = url.lastPathComponent
         
-        lecture.fileName = fileName
+//        lecture.fileName = fileName
+        lecture.fileName = name
         let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
         lecture.localFileUrl = folder.URLByAppendingPathComponent("lecture_\(lecture.id!).\(fileExtention!)").absoluteString
         
