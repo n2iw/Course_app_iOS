@@ -219,7 +219,7 @@ class VideoViewController: CDTableViewInViewController, UITableViewDataSource, U
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 1 {
-            return "Trancsripts"
+            return "Transcripts"
         } else if section == 0 {
             return "Videos"
         }
