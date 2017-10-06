@@ -23,7 +23,7 @@ class CDMessage: NSManagedObject {
             return
         }
         
-        let path = Settings.messagePath + "?group=\(id)"
+        let path = Settings.messagePath + "?group=\(id)&limit=1000&sort=id%20DESC"
         
         server.get(path) {success, data in
             if success {
