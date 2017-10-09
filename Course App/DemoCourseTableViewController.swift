@@ -9,12 +9,12 @@
 import UIKit
 
 class DemoCourseTableViewController: UITableViewController {
+    private let context = ((UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext)!
 
     //MARK: ViewController Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View did load")
         
         guard let phone = Settings.getPhone()
             where phone != ""
@@ -26,7 +26,7 @@ class DemoCourseTableViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        print("View will Appear")
+        CDCourse.fetchCourses(self.context)
     }
     
     // MARK: - Table view data source

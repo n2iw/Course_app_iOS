@@ -10,10 +10,12 @@ import UIKit
 
 class DemoDayTableViewController: UITableViewController {
     private let context = ((UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext)!
+    var course: CDCourse?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.course = CDCourse.getCourseById(5, inContext: self.context)
+        CDLecture.fetchLectures(self.course!, context: self.context)
     }
 
     override func didReceiveMemoryWarning() {
