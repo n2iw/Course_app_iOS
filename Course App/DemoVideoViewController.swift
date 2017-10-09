@@ -33,7 +33,7 @@ class DemoVideoViewController: CDTableViewInViewController, UITableViewDataSourc
             }
             
             self.title = lecture.name
-            self.navigationItem.title = lecture.name
+            self.navigationItem.title = "Day 2"
             
             let request = NSFetchRequest(entityName: "CDVideo")
             request.sortDescriptors = [NSSortDescriptor(
@@ -50,8 +50,8 @@ class DemoVideoViewController: CDTableViewInViewController, UITableViewDataSourc
             )
             
             let folder = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-            let day1 = ["title": "Unit_1_Pre-reading", "rUrl": lecture.remoteUrl!, "localUrl": lecture.localFileUrl!]
-            let day2 = ["title": "Unit_1_Reading", "rUrl": "https://shaban.rit.albany.edu/files/Unit_1_Reading_.pdf", "localUrl": folder.URLByAppendingPathComponent("pdf2.pdf").absoluteString]
+            let day1 = ["title": "Unit_1_Pre-reading", "rUrl": lecture.remoteUrl!, "localUrl": folder.URLByAppendingPathComponent("Unit_1_Pre-Reading.pdf").absoluteString]
+            let day2 = ["title": "Unit_1_Reading", "rUrl": "https://shaban.rit.albany.edu/files/Unit_1_Reading_.pdf", "localUrl": folder.URLByAppendingPathComponent("Unit_1_Reading.pdf").absoluteString]
             self.pdfs = [day1, day2]
             for i in 0 ..< pdfs.count {
                 let pdf = pdfs[i]
