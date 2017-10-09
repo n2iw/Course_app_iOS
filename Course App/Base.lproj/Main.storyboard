@@ -587,6 +587,39 @@
             </objects>
             <point key="canvasLocation" x="2600" y="1197"/>
         </scene>
+        <!--Web View Controller-->
+        <scene sceneID="cd9-Ob-bds">
+            <objects>
+                <viewController id="GnY-7F-fHc" customClass="WebViewController" customModule="Shaban" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kNI-pO-fRS"/>
+                        <viewControllerLayoutGuide type="bottom" id="Np7-oD-bOf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vPg-Eo-uVT">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0XZ-2b-u3a">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="0XZ-2b-u3a" secondAttribute="bottom" id="6jv-2d-t8H"/>
+                            <constraint firstAttribute="trailing" secondItem="0XZ-2b-u3a" secondAttribute="trailing" id="6nz-UY-XbX"/>
+                            <constraint firstItem="0XZ-2b-u3a" firstAttribute="leading" secondItem="vPg-Eo-uVT" secondAttribute="leading" id="MiW-Cw-mD8"/>
+                            <constraint firstItem="0XZ-2b-u3a" firstAttribute="top" secondItem="vPg-Eo-uVT" secondAttribute="top" id="pUy-HZ-G8k"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="0XZ-2b-u3a" id="znN-Zo-pN3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="S17-S7-GKa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2725" y="1996"/>
+        </scene>
         <!--Days-->
         <scene sceneID="bEM-M9-YX7">
             <objects>
@@ -647,7 +680,7 @@
                                 </constraints>
                                 <state key="normal" title="Chat"/>
                                 <connections>
-                                    <segue destination="4Au-Ii-EbK" kind="show" id="qt7-Ho-QHf"/>
+                                    <segue destination="4Au-Ii-EbK" kind="show" identifier="chat" id="qt7-Ho-QHf"/>
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="48" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4uu-S1-k6Z">
@@ -701,6 +734,7 @@
                                         <connections>
                                             <outlet property="progressBar" destination="8g8-n6-2VL" id="u4p-h4-bzi"/>
                                             <outlet property="titleLabel" destination="rNb-79-fWB" id="4zU-8K-ByA"/>
+                                            <segue destination="GnY-7F-fHc" kind="show" identifier="open-link" id="O8y-Pe-Ej2"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

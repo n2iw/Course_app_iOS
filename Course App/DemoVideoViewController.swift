@@ -208,24 +208,45 @@ class DemoVideoViewController: CDTableViewInViewController, UITableViewDataSourc
     }
     
     // MARK: - Navigation
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        let  indexPath = self.tableView.indexPathForSelectedRow
+        if identifier == "open-link" {
+            if indexPath?.section == 2 {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return true
+        }
+    }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let chatVC = segue.destinationViewController as? ChatViewController {
-            chatVC.lecture = self.lecture
+        if segue.identifier == "open-link" {
+            if let webVC = segue.destinationViewController as? WebViewController {
+                webVC.url = NSURL(string: "https://quizlet.com/214595868/human-body-systems-flash-cards/")
+            }
+        } else if segue.identifier == "chat" {
+            if let chatVC = segue.destinationViewController as? ChatViewController {
+                chatVC.lecture = self.lecture
+            }
         }
     }
     
     // MARK: UITableViewDataSource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return super.tableView(tableView, numberOfRowsInSection: section)
-        } else {
+        } else if section == 1{
             return pdfs.count
+        } else {
+            return 1
         }
     }
     
@@ -234,6 +255,8 @@ class DemoVideoViewController: CDTableViewInViewController, UITableViewDataSourc
             return "Transcripts"
         } else if section == 0 {
             return "Videos"
+        } else if section == 2 {
+            return "Links"
         }
         return nil
     }
@@ -250,10 +273,12 @@ class DemoVideoViewController: CDTableViewInViewController, UITableViewDataSourc
                         }
                     }
                 }
-            } else {
+            } else if indexPath.section == 1 {
                 if indexPath.row < pdfs.count {
                     videoCell.titleLabel?.text = pdfs[indexPath.row]["title"]
                 }
+            } else {
+                    videoCell.titleLabel?.text = "Quiz 1"
             }
             
             let progress = progresses[indexPath] ?? 0
