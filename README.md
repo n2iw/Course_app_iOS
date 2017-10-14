@@ -6,8 +6,8 @@ A mobile learning (iOS) app.
 
 - View lecture notes (PDF)
 - Watch lecture videos 
-- Cache contents for offline use
 - Live chat with other users
+- Automatically caches contents for offline use
 
 ## Technologies used
 
