@@ -65,6 +65,7 @@ class DemoCourseTableViewController: UITableViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let weekVC = segue.destinationViewController as? DemoWeekTableViewController {
+            weekVC.temp = ""
             let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)
             if indexPath!.section == 0 && indexPath!.row == 0 {
                 print("Week \(indexPath!.row) selected")

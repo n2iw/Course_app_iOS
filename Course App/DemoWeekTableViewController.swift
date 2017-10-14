@@ -9,6 +9,8 @@
 import UIKit
 
 class DemoWeekTableViewController: UITableViewController {
+    
+    var temp: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +59,7 @@ class DemoWeekTableViewController: UITableViewController {
         if let indexPath = tableView.indexPathForCell(sender as! UITableViewCell) {
             if indexPath.section == 0 && indexPath.row == 0 {
                 if let dayVC = segue.destinationViewController as? DemoDayTableViewController {
+                    dayVC.temp = ""
                     print("Day \(indexPath.row) selected")
                 }
             }

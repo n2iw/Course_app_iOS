@@ -11,6 +11,7 @@ import UIKit
 class DemoDayTableViewController: UITableViewController {
     private let context = ((UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext)!
     var course: CDCourse?
+    var temp: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
