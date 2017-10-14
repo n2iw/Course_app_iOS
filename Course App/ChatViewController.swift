@@ -149,7 +149,7 @@ class ChatViewController: CDTableViewInViewController, UITextFieldDelegate, UITa
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Message", forIndexPath: indexPath)
         if let message = fetchedResultsController?.objectAtIndexPath(indexPath) as? CDMessage {
-            cell.textLabel?.text = message.author! + ":"
+            cell.textLabel?.text = message.author! + ":    (\(message.getTimestamp()))"
             cell.detailTextLabel?.text = message.content
         }
         

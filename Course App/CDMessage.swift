@@ -112,4 +112,11 @@ class CDMessage: NSManagedObject {
         
        return (try? context.executeFetchRequest(request))?.first as? CDMessage
     }
+    
+    func getTimestamp() -> String {
+        let dateFormatterGet = NSDateFormatter()
+        dateFormatterGet.dateFormat = "MM-dd hh:mm"
+        
+        return dateFormatterGet.stringFromDate(self.createdAt!)
+    }
 }
